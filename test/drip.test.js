@@ -2,6 +2,9 @@ var assert = require('assert'),
     drip = require('drip');
 
 module.exports = {
+  'drip has version': function() {
+    assert.isNotNull(drip.version);
+  },
   'simple drip': function() {
     var n = 0;
     var drop = new drip();
