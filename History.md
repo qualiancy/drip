@@ -1,4 +1,12 @@
 
+0.0.3 / 2011-10-04 
+==================
+
+  * all doc updates, ready for gh-pages
+  * Comments for main module
+  * added version
+  * this._callbacks created in constructor
+
 0.0.2 / 2011-10-03 
 ==================
 
