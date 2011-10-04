@@ -1,4 +1,10 @@
 
+0.0.4 / 2011-10-04 
+==================
+
+  * package has homepage
+  * comment updates for docs
+
 0.0.3 / 2011-10-04 
 ==================
 
