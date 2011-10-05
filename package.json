@@ -2,7 +2,7 @@
   "author": "Jake Luer <@jakeluer>",
   "name": "drip",
   "description": "micro event-emitter",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "http://logicalparadox.github.com/drip",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "test": "expresso -I lib test/*.test.js"
   },
   "engines": {
-    "node": "~0.4.12"
+    "node": ">= 0.4.8"
   },
   "dependencies": {},
   "devDependencies": {}
