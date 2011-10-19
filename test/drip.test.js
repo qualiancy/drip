@@ -1,100 +1,76 @@
-var assert = require('assert'),
-    drip = require('drip');
+var sherlock = require('sherlock')
+  , assert = sherlock.assert;
 
-module.exports = {
-  'drip has version': function() {
+var drip = require('..');
+
+module.exports = new sherlock.Investigation('Drip Event Emitter', function (test, done) {
+  
+  test('Drip#version', function (test, done) {
     assert.isNotNull(drip.version);
-  },
-  'simple drip': function() {
-    var n = 0;
-    var drop = new drip();
+    done();
+  });
+  
+  test('Drip#on', function (test, done) {
+    var drop = new drip()
+      , spy = sherlock.Spy(function (what) {
+          assert.equal(what.msg, 'hello');
+        });
     
-    drop.on('hello', function() {
-      n++;
-    });
-    
-    drop.on('hello', function() {
-      n++;
-    });
-    
-    setTimeout(function() {
-      drop.emit('hello');
-    }, 200);
-    
-    this.on('exit', function() {
-      assert.equal(n, 2, 'both events fired');
-    });
-  },
-  'drip with data': function() {
-    var n = 0;
-    var drop = new drip();
-    
-    drop.on('say', function (what) {
-      n++;
-      assert.equal(what.msg, 'hello');
-    });
+    drop.on('say', spy);
+    drop.on('say', spy);
     
     setTimeout(function() {
       drop.emit('say', {msg: 'hello'});  
-    }, 200);
+      done();
+    }, 100);
     
     this.on('exit', function() {
-      assert.equal(n, 1, 'event fired');
+      assert.equal(spy.calls.length, 2, 'both events fired');
     });
-  },
-  'drip turned off': function() {
-    var n = 0;
-    var drop = new drip();
-    var fn1 = function() { n++; };
-    var fn2 = function() { n++; };
+  });
+  
+  test('Drip#off', function (test, done) {
+    var drop = new drip()
+      , spy1 = sherlock.Spy()
+      , spy2 = sherlock.Spy();
     
-    drop.on('hello', fn1);
-    drop.on('hello', fn2);
+    drop.on('hello', spy1);
+    drop.on('hello', spy2);
     
     assert.equal(drop._callbacks['hello'].length, 2, 'both callbacks subscribed');
     
     setTimeout(function() {
-      drop.off('hello', fn1);
+      drop.off('hello', spy1);
       drop.emit('hello');
-    }, 200);
+      
+      test('Drip cleans up on `off`', function (test, done) {
+        assert.equal(drop._callbacks['hello'].length, 1, 'only one callback');
+        drop.off('hello', spy2);
+        assert.isUndefined(drop._callbacks['hello']);
+        drop.on('hello', spy1);
+        drop.on('hello', spy2);
+        assert.equal(drop._callbacks['hello'].length, 2, 'both callbacks subscribed');
+        drop.off('hello');
+        assert.isUndefined(drop._callbacks['hello']);
+        done();
+      });
+      
+      done();
+    }, 100);
     
     this.on('exit', function() {
-      assert.equal(n, 1, 'only one event fired');
+      assert.isFalse(spy1.called, 'spy1 not called');
+      assert.isTrue(spy2.called, 'spy2 called');
     });
-  },
-  'when event has no callbacks it is deleted': function() {
-    var drop = new drip();
-    var fn1 = function() { n++; };
-    var fn2 = function() { n++; };
+  });
+  
+  test('Drip#many/once', function (test, done) {
+    var drop = new drip()
+      , spy1 = sherlock.Spy()
+      , spy2 = sherlock.Spy();
     
-    drop.on('hello', fn1);
-    drop.on('hello', fn2);
-    
-    assert.equal(drop._callbacks['hello'].length, 2, 'both callbacks subscribed');
-    
-    drop.off('hello', fn1);
-    drop.off('hello', fn2);
-    
-    assert.isUndefined(drop._callbacks['hello']);
-    
-    drop.on('hello', fn1);
-    drop.on('hello', fn2);
-    
-    assert.equal(drop._callbacks['hello'].length, 2, 'both callbacks subscribed');
-    
-    drop.off('hello');
-    
-    assert.isUndefined(drop._callbacks['hello']);
-  },
-  'using the many counter': function() {
-    var n=0;
-    var o=0;
-    var drop = new drip();
-    var fn1 = function() { n++; };
-    var fn2 = function() { o++; };
-    
-    drop.many('hello', 2, fn1);
-    drop.once('hi', fn2);
+    drop.many('hello', 2, spy1);
+    drop.once('hi', spy2);
     
     setTimeout(function() {
       drop.emit('hi');
@@ -102,11 +78,14 @@ module.exports = {
       drop.emit('hello');
       drop.emit('hello');
       drop.emit('hello');
-    }, 200);
+      done();
+    }, 100);
     
     this.on('exit', function() {
-      assert.equal(n, 2, 'fn1 callback called only twice');
-      assert.equal(o, 1, 'fn2 callback only called once');
+      assert.equal(spy1.calls.length, 2, 'spy1 callback called only twice');
+      assert.equal(spy2.calls.length, 1, 'spy2 callback only called once');
     });
-  }
-};
+  });
+  
+  done();
+});

@@ -10,10 +10,11 @@
   },
   "main": "index",
   "scripts": {
-    "test": "expresso -I lib test/*.test.js"
+    "test": "sherlock test/*.test.js",
+    "prepublish" : "npm prune"
   },
   "engines": {
-    "node": ">= 0.4.8"
+    "node": ">= 0.4.8 < 0.7.0"
   },
   "dependencies": {},
   "devDependencies": {
