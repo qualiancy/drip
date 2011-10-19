@@ -16,5 +16,7 @@
     "node": ">= 0.4.8"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "sherlock": "0.1.x"
+  }
 }
