@@ -1,4 +1,11 @@
 
+0.0.6 / 2011-10-19 
+==================
+
+  * Merge branch 'feature/new-tests'
+  * tests rewritten with sherlock
+  * sherlock for testing
+
 0.0.5 / 2011-10-05 
 ==================
 
