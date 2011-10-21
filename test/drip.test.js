@@ -87,5 +87,30 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
     });
   });
   
+  test('Drip#namespaces', function (test, done) {
+    var drop = new drip()
+      , spy1 = sherlock.Spy()
+      , spy2 = sherlock.Spy()
+      , spy3 = sherlock.Spy();
+      
+    
+    drop.on('name:space', spy1);
+    drop.on('name:universe', spy2);
+    drop.on('name:*', spy3);
+    
+    setTimeout(function() {
+      drop.emit('name:space');
+      drop.emit('name:universe');
+      done();
+    }, 100);
+    
+    this.on('exit', function() {
+      assert.equal(spy1.calls.length, 1, 'spy1 called once');
+      assert.equal(spy2.calls.length, 1, 'spy2 called once');
+      assert.equal(spy3.calls.length, 2, 'spy3 `namespaced wildcard` called twice');
+    });
+    
+  });
+  
   done();
 });
