@@ -89,35 +89,68 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
   });
   
   test('Drip#namespaces', function (test, done) {
-    var drop = new drip()
-      , spy1 = sherlock.Spy()
-      , spy2 = sherlock.Spy()
-      , spy3 = sherlock.Spy()
-      , spy4 = sherlock.Spy()
-      , spy5 = sherlock.Spy();
+    
+    test('basic namespacing', function (test, done) {
+      var drop = new drip()
+        , spy1 = sherlock.Spy()
+        , spy2 = sherlock.Spy()
+        , spy3 = sherlock.Spy()
+        , spy4 = sherlock.Spy()
+        , spy5 = sherlock.Spy();
       
-    drop.on('name:space', spy1);
-    drop.on('name:universe', spy2);
-    drop.on('name:*', spy3);
-    drop.on('name', spy4);
-    drop.on('*:universe', spy5);
-    
-    setTimeout(function() {
-      drop.emit('name');
-      drop.emit('name:space');
-      drop.emit('name:universe');
-      drop.emit('hello:universe');
-      done();
-    }, 100);
-    
-    this.on('exit', function() {
-      assert.equal(spy1.calls.length, 1, 'spy1 called once');
-      assert.equal(spy2.calls.length, 1, 'spy2 called once');
-      assert.equal(spy3.calls.length, 2, 'spy3 `namespaced wildcard` called twice');
-      assert.equal(spy4.calls.length, 1, 'spy4 `no wildcard` called once');
-      assert.equal(spy5.calls.length, 1, 'spy5 `ns is wildcard` called twice');
+      drop.on('name:space', spy1);
+      drop.on('name:universe', spy2);
+      drop.on('name:*', spy3);
+      drop.on('name', spy4);
+      drop.on('*:universe', spy5);
+      
+      setTimeout(function() {
+        drop.emit('name', {name: true});
+        drop.emit('name:space', {name: 'space'});
+        drop.emit('name:universe', {name: 'universe'});
+        drop.emit('hello:universe', {hello: 'universe'});
+        done();
+      }, 100);
+      
+      this.on('exit', function() {
+        console.log(drop._callbacks);
+        console.log(spy5.calls);
+        assert.equal(spy1.calls.length, 1, 'simple - spy1 called once');
+        assert.equal(spy2.calls.length, 1, 'simple - spy2 called once');
+        assert.equal(spy3.calls.length, 2, 'simple - spy3 `namespaced wildcard` called twice');
+        assert.equal(spy4.calls.length, 1, 'simple - spy4 `no wildcard` called once');
+        assert.equal(spy5.calls.length, 2, 'simple - spy5 `ns is wildcard` called twice');
+      });
     });
     
+    test('complex scenarios', function (test, done) {
+      var drop = new drip()
+        , spy1 = sherlock.Spy()
+        , spy2 = sherlock.Spy()
+        , spy3 = sherlock.Spy()
+        , spy4 = sherlock.Spy()
+        , spy5 = sherlock.Spy();
+      
+      drop.on('name:space:*', spy1);
+      drop.on('name:*:universe', spy2);
+      
+      setTimeout(function () {
+        drop.emit('name:space:universe', {space: 'universe'});
+        drop.emit('name:space:here', {space: 'here'});
+        drop.emit('name:here:universe', {here: 'universe'});
+        done();
+      }, 100);
+      
+      this.on('exit', function() {
+        //console.log(drop._callbacks.name);
+        //console.log(spy1.calls, spy1.calls.length);
+        //console.log(spy2.calls);
+        assert.equal(spy1.calls.length, 2, 'spy1 called twice');
+        assert.equal(spy2.calls.length, 2, 'spy2 called twice');
+      });
+    });
+    
+    done();
   });
   
   done();
