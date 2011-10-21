@@ -91,14 +91,16 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
     var drop = new drip()
       , spy1 = sherlock.Spy()
       , spy2 = sherlock.Spy()
-      , spy3 = sherlock.Spy();
+      , spy3 = sherlock.Spy()
+      , spy4 = sherlock.Spy();
       
-    
     drop.on('name:space', spy1);
     drop.on('name:universe', spy2);
     drop.on('name:*', spy3);
+    drop.on('name', spy4);
     
     setTimeout(function() {
+      drop.emit('name');
       drop.emit('name:space');
       drop.emit('name:universe');
       done();
@@ -108,6 +110,7 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
       assert.equal(spy1.calls.length, 1, 'spy1 called once');
       assert.equal(spy2.calls.length, 1, 'spy2 called once');
       assert.equal(spy3.calls.length, 2, 'spy3 `namespaced wildcard` called twice');
+      assert.equal(spy4.calls.length, 1, 'spy4 `no wildcard` called once');
     });
     
   });
