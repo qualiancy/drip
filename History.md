@@ -1,4 +1,14 @@
 
+0.1.0 / 2011-10-21 
+==================
+
+  * Merge branch 'feature/namespaces'
+  * removed logging
+  * Improved on traversing for nested binds
+  * Namespaced events… '*:event' & 'event:*' acceptable.
+  * more test scenarios for namespaces
+  * Drip#on wildcard namespace
+
 0.0.6 / 2011-10-19 
 ==================
 
