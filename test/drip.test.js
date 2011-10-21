@@ -113,8 +113,6 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
       }, 100);
       
       this.on('exit', function() {
-        console.log(drop._callbacks);
-        console.log(spy5.calls);
         assert.equal(spy1.calls.length, 1, 'simple - spy1 called once');
         assert.equal(spy2.calls.length, 1, 'simple - spy2 called once');
         assert.equal(spy3.calls.length, 2, 'simple - spy3 `namespaced wildcard` called twice');
@@ -142,9 +140,6 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
       }, 100);
       
       this.on('exit', function() {
-        //console.log(drop._callbacks.name);
-        //console.log(spy1.calls, spy1.calls.length);
-        //console.log(spy2.calls);
         assert.equal(spy1.calls.length, 2, 'spy1 called twice');
         assert.equal(spy2.calls.length, 2, 'spy2 called twice');
       });
