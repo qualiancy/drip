@@ -1,4 +1,10 @@
 
+0.1.1 / 2011-10-21 
+==================
+
+  * options to be stored in this._drip
+  * inline comment cleanup
+
 0.1.0 / 2011-10-21 
 ==================
 
