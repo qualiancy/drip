@@ -1,4 +1,10 @@
 
+0.1.3 / 2011-10-26 
+==================
+
+  * bad length check for callbacks in traverse
+  * code condensing
+
 0.1.2 / 2011-10-22 
 ==================
 
