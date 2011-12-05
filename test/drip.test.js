@@ -18,7 +18,7 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
     
     drop.on('say', spy);
     drop.on('say', spy);
-    drop.on('*', spy);
+    //drop.on('*', spy);
     
     setTimeout(function() {
       drop.emit('say', {msg: 'hello'});  
@@ -26,7 +26,7 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
     }, 100);
     
     this.on('exit', function() {
-      assert.equal(spy.calls.length, 3, 'both events fired');
+      assert.equal(spy.calls.length, 2, 'both events fired');
     });
   });
   
@@ -38,21 +38,22 @@ module.exports = new sherlock.Investigation('Drip Event Emitter', function (test
     drop.on('hello', spy1);
     drop.on('hello', spy2);
     
-    assert.equal(drop._callbacks['hello']._.length, 2, 'both callbacks subscribed');
+    assert.equal(drop._events['hello'].length, 2, 'both callbacks subscribed');
     
     setTimeout(function() {
       drop.off('hello', spy1);
       drop.emit('hello');
       
       test('Drip cleans up on `off`', function (test, done) {
-        assert.equal(drop._callbacks['hello']._.length, 1, 'only one callback');
+        assert.equal(drop._events['hello'].length, 1, 'only one callback');
         drop.off('hello', spy2);
-        assert.isUndefined(drop._callbacks['hello']);
+        console.log(drop);
+        assert.isUndefined(drop._events['hello']);
         drop.on('hello', spy1);
         drop.on('hello', spy2);
-        assert.equal(drop._callbacks['hello']._.length, 2, 'both callbacks subscribed');
+        assert.equal(drop._events['hello'].length, 2, 'both callbacks subscribed');
         drop.off('hello');
-        assert.isUndefined(drop._callbacks['hello']);
+        assert.isUndefined(drop._events['hello']);
         done();
       });
       
