@@ -18,13 +18,6 @@ var drop2 = new drip({
   wildcards: true
 });
 
-bench('events heating up', function (next) {
-  ee.on('test1', function () { 1==1; });
-  ee.emit('test1');
-  ee.removeAllListeners('test1');
-  next();
-});
-
 bench('nodejs native events', function (next) {
   ee1.on('test1', function () { 1==1; });
   ee1.emit('test1');
