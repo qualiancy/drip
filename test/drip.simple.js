@@ -32,26 +32,6 @@ describe('Drip simple', function () {
       should.not.exist(drop._drip);
     });
 
-    if('should accept the wildcard option', function () {
-      var drop = new drip({
-        wildcards: true
-      });
-
-      should.exist(drop._drip);
-      drop._drip.wildcards.should.be.ok;
-      drop._drip.delimeter.should.equal(':');
-    });
-
-    it('should accept the delimeter option', function () {
-      var drop = new drip({
-        delimeter: '.'
-      });
-
-      should.exist(drop._drip);
-      drop._drip.wildcards.should.be.ok;
-      drop._drip.delimeter.should.equal('.');
-    });
-
     it('should not have an event queue before adding listeners', function () {
       var drop = new drip();
       should.not.exist(drop._events);
@@ -81,13 +61,13 @@ describe('Drip simple', function () {
     });
   });
 
-  describe('#removeAllListeners', function () {
+  describe('#off (without functions)', function () {
     var drop = new drip()
       , noop = function () { 1 == 1 }
       , noop2 = function () { 2 == 2 };
 
     beforeEach(function() {
-      drop.removeAllListeners();
+      drop.off();
       drop.on('test', noop);
       drop.on('test', noop2);
       drop.on('test2', noop);
@@ -96,15 +76,55 @@ describe('Drip simple', function () {
 
     it('should remove all listeners for a given event', function () {
       drop._events['test'].length.should.equal(2);
-      drop.removeAllListeners('test');
+      drop.off('test');
       should.not.exist(drop._events['test']);
     });
 
     it('should empty _events if no event given', function () {
       drop._events['test2'].should.be.a('function');
       drop._events['test3'].should.be.a('function');
-      drop.removeAllListeners();
+      drop.off();
       should.not.exist(drop._events);
+    });
+
+    it('should ignore removing events that dont exist', function () {
+      drop.off('hello world');
+      drop._events['test'].length.should.equal(2);
+    });
+  });
+
+  describe('#off (with functions)', function () {
+    var drop = new drip();
+
+    beforeEach(function () {
+      drop.removeAllListeners();
+    });
+
+    it('should remove an event if the fn passed is the only callback', function () {
+      var noop = function () {};
+
+      drop.on('test', noop);
+      drop._events['test'].should.be.a('function');
+
+      drop.off('test', noop);
+      should.not.exist(drop._events['test']);
+    });
+
+    it('should remove a fn from stack if stack is an array', function () {
+      var noop = function () {}
+        , noop2 = function () {};
+
+      drop.on('test', noop);
+      drop.on('test', noop2);
+
+      drop._events['test'].should.be.instanceof(Array);
+      drop._events['test'].length.should.equal(2);
+
+      drop.off('test', noop);
+
+      drop._events['test'].should.be.a('function');
+      drop._events['test'].should.not.equal(noop);
+      drop._events['test'].should.equal(noop2);
     });
   });
 
@@ -159,41 +179,6 @@ describe('Drip simple', function () {
 
       spy.called.should.be.ok;
       spy.calls.length.should.equal(1);
-    });
-  });
-
-  describe('#off', function () {
-    var drop = new drip();
-
-    beforeEach(function () {
-      drop.removeAllListeners();
-    });
-
-    it('should remove an event if the function passed is the only callback', function () {
-      var noop = function () {};
-
-      drop.on('test', noop);
-      drop._events['test'].should.be.a('function');
-
-      drop.off('test', noop);
-      should.not.exist(drop._events['test']);
-    });
-
-    it('should remove a fn from stack if stack is an array', function () {
-      var noop = function () {}
-        , noop2 = function () {};
-
-      drop.on('test', noop);
-      drop.on('test', noop2);
-
-      drop._events['test'].should.be.instanceof(Array);
-      drop._events['test'].length.should.equal(2);
-
-      drop.off('test', noop);
-
-      drop._events['test'].should.be.a('function');
-      drop._events['test'].should.not.equal(noop);
-      drop._events['test'].should.equal(noop2);
     });
   });
 });
