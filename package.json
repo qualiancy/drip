@@ -18,8 +18,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "sherlock": "0.1.x",
+    "mocha": "0.3.x",
+    "should": "0.3.x",
     "matcha": "0.0.x",
-    "eventemitter2": "latest"
+    "eventemitter2": "0.4.1"
   }
 }
