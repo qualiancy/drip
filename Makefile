@@ -13,7 +13,7 @@ docs: clean-docs
 	@./node_modules/.bin/codex build docs \
 		--out docs/out
 	@./node_modules/.bin/codex serve \
-		--out docs/out
+		--out docs/out --static /drip
 
 clean-docs:
 	@rm -rf docs/out
