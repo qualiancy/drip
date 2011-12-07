@@ -3,6 +3,12 @@ TESTS = test/*.js
 REPORTER = dot
 BENCHMARKS = benchmarks/*.js
 
+all:
+	@node support/compile
+
+clean:
+	@rm -f dist/drip.js dist/drip.min.js
+
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter $(REPORTER) \
@@ -11,4 +17,4 @@ test:
 benchmark:
 	@NODE_ENV=test ./node_modules/.bin/matcha $(BENCHMARKS)
 
-.PHONY: test benchmark
+.PHONY: all clean test benchmark
