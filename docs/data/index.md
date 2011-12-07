@@ -7,9 +7,9 @@
 
 # Table of Contents
 * Installation Instruction for node.js and browser are below.
-* [API Documentation](/code/) outlines the publicly accessible functions with annotated source code.
-* [Usage Scenarios](/pages/usage/) walks through several examples of using `drip`.
-* [For Contributors](/pages/contributors/) informs those interested in contributing on how to test and other best practices.
+* [API Documentation](code/) outlines the publicly accessible functions with annotated source code.
+* [Usage Scenarios](pages/usage/) walks through several examples of using `drip`.
+* [For Contributors](pages/contributors/) informs those interested in contributing on how to test and other best practices.
 
 # Installation
 
@@ -25,8 +25,8 @@ Package is available through [npm](http://npmjs.org):
 
 Download your desired build:
 
-* Uncompressed: [drip.js](https://raw.github.com/logicalparadox/drip/0.2.1/dist/drip.js)
-* Minified: [drip.min.js](https://raw.github.com/logicalparadox/drip/0.2.1/dist/drip.min.js)
+* Uncompressed: [drip.js](https://raw.github.com/logicalparadox/drip/0.2.2/dist/drip.js)
+* Minified: [drip.min.js](https://raw.github.com/logicalparadox/drip/0.2.2/dist/drip.min.js)
 
 Then include on your site:
 
