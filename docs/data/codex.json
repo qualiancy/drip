@@ -1,0 +1,13 @@
+{
+  "locals": {
+    "title": "Drip"
+  },
+  "code": {
+    "index": {
+      "title": "lib/drip.js",
+      "file": "../../lib/drip.js",
+      "description": "",
+      "github": "https://github.com/logicalparadox/drip/blob/master/lib/drip.js"
+    }
+  }
+}

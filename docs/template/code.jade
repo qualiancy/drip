@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  - var comments = file.prepared
+  #code
+    :markdown
+      ### #{file.title} [[view on github](#{file.link})]
+    for comment in comments
+      unless comment.ignore
+        article.codeblock
+          .header!= comment.description.summary
+          - if (comment.ctx && comment.ctx.string)
+            .ctx
+              h3= comment.ctx.string
+          - if (comment.tags.length)
+            .tags
+              each tag in comment.tags
+                - if (tag.type == 'api')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.visibility #{tag.visibility}
+                - else if (tag.type == 'param')
+                  -var types = tag.types.join(' | ')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.types &#123; #{types} &#125;
+                    span.name #{tag.name}
+                    span.desc #{tag.description}
+                - else if (tag.type == 'see')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.name #{tag.local}
+                - else
+                  - console.log('unknown tag')
+                  - console.log(tag)
+          .description!= comment.description.body
+          .view-source View Source
+          .code-wrap
+            pre.source.prettyprint
+              code= comment.code

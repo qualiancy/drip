@@ -1,0 +1,86 @@
+@import 'nib'
+@import 'fez'
+
+global-reset()
+
+fez-reset()
+
+accent = darken(#fff, 15%)
+
+body
+  font 13px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif
+
+h1, h2, h3
+  font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
+
+h1, h3
+  color #4183C4
+
+a
+  color #cc3300
+  text-decoration none
+
+header, section#content, footer
+  width 740px
+  margin-left 220px
+
+header
+  clearfix()
+  margin-top 50px
+  h1
+    font-size 45px
+    color #4183C4
+  p
+    color lighten(#000, 40%)
+    font-size 22px
+    font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
+  .button
+    button-shiny()
+    float left
+    cursor pointer
+  .clone
+    float left
+    margin-left 15px
+    background #e6e6e6
+    border-radius 5px
+    padding 5px 15px 6px
+    font 12px "Bitstream Vera Sans Mono", "Courier", monospace
+
+section#content
+  margin-top 50px
+  margin-bottom 50px
+  min-height 350px
+
+  h1
+    border-top 1px solid accent
+    padding-top 10px
+    margin-top 85px
+
+nav
+  position fixed
+  top 65px
+  left 50px
+  width 120px
+
+  ul
+    list-style none
+    li
+      margin-left 0px
+      text-align right
+      a
+        color lighten(#000, 40%)
+        font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
+        font-size 14px
+        text-transform lowercase
+        &:hover
+          text-decoration underline
+
+footer
+  margin-top 100px
+  padding-top 25px
+  margin-bottom 50px
+  border-top 1px solid accent
+  color lighten(#000, 50%)
+
+@import 'scrollbar'
+@import 'code'
