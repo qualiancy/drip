@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/logicalparadox/drip.png)](http://travis-ci.org/logicalparadox/drip)
+
 # Drip
 
 A tiny event emitter.
