@@ -1,4 +1,19 @@
 
+0.2.1 / 2011-12-07
+==================
+
+  * readme/description update
+  * added browser compile to makefile
+  * 0.2.0 browser dist
+  * browser compile function
+  * browser prefix/suffix/copyright
+  * matcha browser test page
+  * build tool: package.json
+  * tests browser compatible
+  * added travis build status to readme
+  * added travis-ci config
+  * removing should.js, using `chai`
+
 0.2.0 / 2011-12-06
 ==================
 
