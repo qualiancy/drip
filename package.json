@@ -1,7 +1,7 @@
 {
   "author": "Jake Luer <jake@alogicalparadox.com>",
   "name": "drip",
-  "description": "An EventEmitter alternative that supports namespaces and wildcards.",
+  "description": "An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.",
   "keyword": [ "event", "events", "eventemitter", "emitter" ],
   "version": "0.2.0",
   "homepage": "http://logicalparadox.github.com/drip",
@@ -24,6 +24,6 @@
     "chai": "0.0.x",
     "matcha": "0.0.x",
     "folio": "0.1.x",
-    "eventemitter2": "0.4.1"
+    "eventemitter2": "0.4.x"
   }
 }

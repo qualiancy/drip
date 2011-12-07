@@ -2,9 +2,14 @@
 
 # Drip
 
-A tiny event emitter.
+An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.
 
 * See the [documentation](http://logicalparadox.github.com/drip).
+
+## Browser Usage
+
+The browser builds are in the `dist` folder. If you are working on changes in a fork,
+please make your changes to `lib/drip.js` and the run `make` to build a browser version.
 
 ## License
 
