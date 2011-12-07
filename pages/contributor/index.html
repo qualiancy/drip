@@ -4,21 +4,21 @@
     <title>For Contributors - Drip
     </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script src="/public/js/prettify.js"></script>
-    <script src="/public/js/main.js"></script>
-    <link rel="stylesheet" href="/public/css/main.css" type="text/css" media="all">
+    <script src="/drip/public/js/prettify.js"></script>
+    <script src="/drip/public/js/main.js"></script>
+    <link rel="stylesheet" href="/drip/public/css/main.css" type="text/css" media="all">
     <link href="http://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet" type="text/css">
   </head>
   <body>
     <nav>
       <ul class="pages">
-        <li><a href="/">Installation / Help</a>
+        <li><a href="/drip/">Installation / Help</a>
         </li>
-        <li><a href="/code/">API Documentation</a>
+        <li><a href="/drip/code/">API Documentation</a>
         </li>
-        <li><a href="/pages/usage/">Usage Scenarios</a>
+        <li><a href="/drip/pages/usage/">Usage Scenarios</a>
         </li>
-        <li><a href="/pages/contributor/">For Contributors</a>
+        <li><a href="/drip/pages/contributor/">For Contributors</a>
         </li>
       </ul>
     </nav>
@@ -38,36 +38,31 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
       </h1>
       <article><h2>Developing</h2>
 
-<p>Please avoid making changes to the <code>dist</code> versions of drip if you are developing in the browser. All
-changes to the library are to be made to <code>lib/drip.js</code> and then packaged for the browser using the <code>make</code>
-command.</p>
+<p>Please avoid making changes to the <code>dist</code> versions of drip if you are developing in the browser. All<br />changes to the library are to be made to <code>lib/drip.js</code> and then packaged for the browser using the <code>make</code><br />command.</p>
 
 <pre><code>  make
 </code></pre>
 
 <h2>Testing</h2>
 
-<p>Tests are written in BDD style on <a href="http://visionmedia.github.com/mocha/">mocha test framework</a> using
-the <a href="https://github.com/logicalparadox/chai">chai assert library</a>. Tests are written to pass in both
-a node.js environment and in the browser.</p>
+<p>Tests are written in BDD style on <a href="http://visionmedia.github.com/mocha/">mocha test framework</a> using<br />the <a href="https://github.com/logicalparadox/chai">chai assert library</a>. Tests are written to pass in both<br />a node.js environment and in the browser.</p>
 
-<p>Browsers tests are currently known to pass in Chrome 16 and Firefox 8. Please let me know if you can test
-in other browsers or other version.</p>
+<p>Browsers tests are currently known to pass in Chrome 16 and Firefox 8. Please let me know if you can test<br />in other browsers or other version.</p>
 
 <h3>Server Side Testing</h3>
 
-<p>It&rsquo;s quite simple&hellip;</p>
+<p>It's quite simple...</p>
 
 <pre><code>  make test
 </code></pre>
 
 <h3>Browser Side Testing</h3>
 
-<p>It&rsquo;s also quite simple. Open up <code>test/browser/index.html</code> in your nearest browser.</p>
+<p>It's also quite simple. Open up <code>test/browser/index.html</code> in your nearest browser.</p>
 
 <h2>Benchmarking</h2>
 
-<p>A benchmarking suite is available but is a work in progress. To run it&hellip;</p>
+<p>A benchmarking suite is available but is a work in progress. To run it...</p>
 
 <pre><code>  make benchmark
 </code></pre>
