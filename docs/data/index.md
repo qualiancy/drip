@@ -3,7 +3,7 @@
   weight: 0
 ---
 
-### The current stable version is [[0.2.1](https://github.com/logicalparadox/drip/tree/0.2.1)].
+### The current stable version is [[0.2.2](https://github.com/logicalparadox/drip/tree/0.2.2)].
 
 # Table of Contents
 * Installation Instruction for node.js and browser are below.

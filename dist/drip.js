@@ -16,27 +16,42 @@
  * MIT Licensed
  */
 
-
 /*!
- * main module export
+ * primary module export
  */
+
 var exports = module.exports = Drip;
 
 /*!
  * version export
  */
-exports.version = '0.2.1';
+
+exports.version = '0.2.2';
 
 /**
- * # Drip
+ * # Drip#constructor
  *
  * Create new instance of drip. Can also be easily
  * be used as the basis for other objects.
  *
- *      var drip = new Drip();
+ *      // for normal events
+ *      var drop = new Drip();
  *
+ *      // for namespaced/wildcarded events
+ *      var drop = new Drip({ wildcard: true });
+ *
+ * Wildcards and namespacing are off by default. By sending
+ * the `wildcard` option as `true`, drip will enable both
+ * wildcards and namespacing.
+ *
+ * ### Options
+ *
+ * * _delimeter_ {String} defaults to `:`
+ * * _wildcard_ {Boolean} defaults to false
+ *
+ * @param {Object} options
+ * @api public
  */
-
 function Drip (opts) {
   if (opts) {
     this._drip = {};
@@ -46,16 +61,27 @@ function Drip (opts) {
 }
 
 /**
- * # .on()
+ * # .on(event, callback)
  *
  * Bind a `callback` function to all emits of `event`.
- * Wildcards `*`, will be executed for every event.
+ * Wildcards `*`, will be executed for every event. At
+ * that heirarchy.
  *
- *      drip.on(event, callback)
+ *      // normal events
+ *      drop.on('foo', callback);
  *
- * @param {String} event
+ *      // namespaced events as string
+ *      drop.on('foo:bar', callback);
+ *
+ *      // namespaced events as array
+ *      drop.on(['foo', 'bar', '*', 'fu'], callback);
+ *
+ * An array can be passed for event when namespacing is enabled
+ * if that is your preference.
+ *
+ * @param {String|Array} event
  * @param {Function} callback
- *
+ * @api public
  */
 
 Drip.prototype.on = function (ev, fn) {
@@ -101,16 +127,17 @@ Drip.prototype.on = function (ev, fn) {
 };
 
 /**
- * # .many()
+ * # .many(event, ttl, callback)
  *
- * Bind a `callback` function to count(`tte`) emits of `event`.
+ * Bind a `callback` function to count(`ttl`) emits of `event`.
  *
- *      drip.many(event, tte, callback)
+ *      // 3 times then auto turn off callback
+ *      drop.many('event', 3, callback)
  *
- * @param {String} event
- * @param {Integer} TTE Times to execute
+ * @param {String|Array} event
+ * @param {Integer} TTL Times to listen
  * @param {Function} callback
- *
+ * @api public
  */
 
 Drip.prototype.many = function (ev, times, fn) {
@@ -128,15 +155,15 @@ Drip.prototype.many = function (ev, times, fn) {
 };
 
 /**
- * # .once()
+ * # .once(event, callback)
  *
  * Bind a `callback` function to one emit of `event`.
  *
- *      drip.once(event, callback)
+ *      drip.once('event', callback)
  *
- * @param {String} event
+ * @param {String|Array} event
  * @param {Function} callback
- *
+ * @api public
  */
 
 Drip.prototype.once = function (ev, fn) {
@@ -145,15 +172,17 @@ Drip.prototype.once = function (ev, fn) {
 };
 
 /**
- * # .off()
+ * # .off([event], [callback])
  *
- * Unbind `callback` function from `event`. If no function is provided will unbind all callbacks from `event`.
+ * Unbind `callback` function from `event`. If no function
+ * is provided will unbind all callbacks from `event`. If
+ * no event is provided, event store will be purged.
  *
- *      drip.off(event, callback)
+ *      drop.off('event', callback);
  *
- * @param {String} eventname
+ * @param {String|Array} event optional
  * @param {Function} callback optional
- *
+ * @api public
  */
 
 Drip.prototype.off = function (ev, fn) {
@@ -248,21 +277,33 @@ Drip.prototype.off = function (ev, fn) {
 };
 
 /**
- * Alias
+ * # .removeAllListeners([event], [callback])
+ *
+ * This is an alias for `.off()`.
+ *
+ * @see Drip.prototype.off
+ * @api public
  */
 
 Drip.prototype.removeAllListeners = Drip.prototype.off;
 
 /**
- * # .emit()
+ * # .emit(event, [args], [...])
  *
  * Trigger `event`, passing any arguments to callback functions.
  *
- *      drip.emit(event, arg, ...)
+ *      // normal event
+ *      drop.emit('event', arg, ...);
  *
- * @param {String} eventname
+ *      // namespaced as string
+ *      drop.emit('foo:bar', arg, ...)
+ *
+ *      // namespaced as array
+ *      drop.emit(['foo', 'bar'], arg, ...);
+ *
+ * @param {String|Array} eventname
  * @param {String|Object} arguments multiple parameters to pass to callback functions
- *
+ * @api public
  */
 
 Drip.prototype.emit = function () {

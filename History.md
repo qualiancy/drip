@@ -1,4 +1,11 @@
 
+0.2.2 / 2011-12-07
+==================
+
+  * added documentation site
+  * documentation
+  * makefile makes docs
+
 0.2.1 / 2011-12-07
 ==================
 
