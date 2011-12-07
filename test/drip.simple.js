@@ -1,6 +1,8 @@
 var expect = require('chai').expect;
 
-var drip = require('..');
+if (!drip) {
+  var drip = require('..');
+}
 
 function Spy (fn) {
   if (!fn) fn = function() {};

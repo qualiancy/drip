@@ -1,7 +1,10 @@
 var expect = require('chai').expect;
 
-var drip = require('..')
-  , wc = { wildcard: true };
+if (!drip) {
+  var drip = require('..');
+}
+
+var wc = { wildcard: true };
 
 function Spy (fn) {
   if (!fn) fn = function() {};
