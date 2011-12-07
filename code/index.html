@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>lib/drip.js - Drip
+    </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="/public/js/prettify.js"></script>
+    <script src="/public/js/main.js"></script>
+    <link rel="stylesheet" href="/public/css/main.css" type="text/css" media="all">
+    <link href="http://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <nav>
+      <ul class="pages">
+        <li><a href="/">Installation / Help</a>
+        </li>
+        <li><a href="/code/">API Documentation</a>
+        </li>
+        <li><a href="/pages/usage/">Usage Scenarios</a>
+        </li>
+        <li><a href="/pages/contributor/">For Contributors</a>
+        </li>
+      </ul>
+    </nav>
+    <header>
+      <h1>Drip
+      </h1>
+      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the
+browser that supports namespaces and wildcards with a focus on perfomance.</p>
+      </div>
+      <div class="gh"><a class="button github">Fork me on GitHub</a>
+        <div class="clone">git clone https://github.com/logicalparadox/drip
+        </div>
+      </div>
+    </header>
+    <section id="content">
+      <div id="code"><h3>lib/drip.js [<a href="https://github.com/logicalparadox/drip/blob/master/lib/drip.js">view on github</a>]</h3>
+        <article class="codeblock">
+          <div class="header"><h1>Drip#constructor</h1>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Create new instance of drip. Can also be easily<br />be used as the basis for other objects.</p>
+
+<pre><code> // for normal events
+ var drop = new Drip();
+
+ // for namespaced/wildcarded events
+ var drop = new Drip({ wildcard: true });
+</code></pre>
+
+<p>Wildcards and namespacing are off by default. By sending<br />the <code>wildcard</code> option as <code>true</code>, drip will enable both<br />wildcards and namespacing.</p>
+
+<h3>Options</h3>
+
+<ul>
+<li><em>delimeter</em> {String} defaults to <code>:</code></li>
+<li><em>wildcard</em> {Boolean} defaults to false</li>
+</ul>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function Drip (opts) {
+  if (opts) {
+    this._drip = {};
+    this._drip.delimeter = opts.delimeter || ':';
+    this._drip.wildcard = opts.wildcard || (opts.delimeter ? true : false);
+  }
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.on(event, callback)</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototype.on()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Bind a <code>callback</code> function to all emits of <code>event</code>.<br />Wildcards <code>*</code>, will be executed for every event. At<br />that heirarchy.</p>
+
+<pre><code> // normal events
+ drop.on('foo', callback);
+
+ // namespaced events as string
+ drop.on('foo:bar', callback);
+
+ // namespaced events as array
+ drop.on(['foo', 'bar', '*', 'fu'], callback);
+</code></pre>
+
+<p>An array can be passed for event when namespacing is enabled<br />if that is your preference.</p>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.on = function (ev, fn) {
+
+  if (!this._drip || (this._drip &amp;&amp; !this._drip.wildcard)) {
+    var map = this._events || (this._events = {});
+
+    if (!map[ev]) {
+      map[ev] = fn;
+    } else if ('function' === typeof map[ev]) {
+      map[ev] = [ map[ev], fn ];
+    } else {
+      map[ev].push(fn);
+    }
+
+  } else if (this._drip &amp;&amp; this._drip.wildcard) {
+    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
+      , store = this._events || (this._events = {});
+
+    var traverse = function (events, map) {
+      var event = events.shift();
+      map[event] = map[event] || {};
+
+      if (events.length) {
+        traverse(events, map[event]);
+      } else {
+
+        if (!map[event]._) {
+          map[event]._= fn;
+        } else if ('function' === typeof map[event]._) {
+          map[event]._ = [ map[event]._, fn ];
+        } else {
+          map[event]._.push(fn);
+        }
+
+      }
+    };
+
+    traverse(evs, store);
+  }
+
+  return true;
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.many(event, ttl, callback)</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototype.many()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Integer &#125;</span><span class="name">TTL</span><span class="desc">Times to listen</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Bind a <code>callback</code> function to count(<code>ttl</code>) emits of <code>event</code>.</p>
+
+<pre><code> // 3 times then auto turn off callback
+ drop.many('event', 3, callback)
+</code></pre>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.many = function (ev, times, fn) {
+  var self = this;
+
+  var wrap = function() {
+    if (--times === 0) {
+      self.off(ev, wrap);
+    }
+    fn.apply(null, arguments);
+  };
+
+  this.on(ev, wrap);
+  return this;
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.once(event, callback)</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototype.once()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Bind a <code>callback</code> function to one emit of <code>event</code>.</p>
+
+<pre><code> drip.once('event', callback)
+</code></pre>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.once = function (ev, fn) {
+  this.many(ev, 1, fn);
+  return this;
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.off([event], [callback])</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototype.off()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">optional</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc">optional</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Unbind <code>callback</code> function from <code>event</code>. If no function<br />is provided will unbind all callbacks from <code>event</code>. If<br />no event is provided, event store will be purged.</p>
+
+<pre><code> drop.off('event', callback);
+</code></pre>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.off = function (ev, fn) {
+  if (!this._events) return false;
+
+  if (arguments.length === 0) {
+    delete this._events;
+    return true;
+  }
+
+  if (!this._drip || (this._drip &amp;&amp; !this._drip.wildcard)) {
+    if ('function' !== typeof fn) {
+      this._events[ev] = null;
+      return true;
+    }
+
+    var fns = this._events[ev];
+
+    if (!fns) {
+      return false;
+    } else if ('function' === typeof fns &amp;&amp; fns == fn) {
+      this._events[ev] = null;
+    } else if (Array.isArray(fns)) {
+      for (var i = 0; i &lt; fns.length; i++) {
+        if (fns[i] == fn) fns.splice(i, 1);
+      }
+
+      if (fns.length === 0)
+        this._events[ev] = null;
+
+      if (fns.length == 1)
+        this._events[ev] = fns[0];
+    }
+  } else {
+    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter);
+
+    if (evs.length === 1) {
+      if (this._events[ev]) this._events[ev]._ = null;
+      return true;
+    } else {
+      var isEmpty = function (obj) {
+        for (var name in obj) {
+          if (obj[name] &amp;&amp; name != '_') return false;
+        }
+        return true;
+      };
+
+      var clean = function (event) {
+        if (fn &amp;&amp; 'function' === typeof fn) {
+          for (var i = 0; i &lt; event._.length; i++) {
+            if (fn == event._[i]) {
+              event._.splice(i, 1);
+            }
+          }
+
+          if (event._.length === 0)
+            event._ = null;
+
+          if (event._ &amp;&amp; event._.length == 1)
+            event._ = event._[0];
+        } else {
+          event._ = null;
+        }
+
+        if (!event._ &amp;&amp; isEmpty(event))
+          event = null;
+
+        return event;
+      };
+
+      var traverse = function (events, map) {
+        var event = events.shift();
+
+        if (map[event] &amp;&amp; map[event]._ &amp;&amp; !events.length)
+          map[event] = clean(map[event]);
+
+        if (map[event] &amp;&amp; events.length)
+          map[event] = traverse(events, map[event]);
+
+        if (!map[event]) {
+          if (isEmpty(map)) map = null;
+        }
+
+        return map;
+      };
+
+      this._events = traverse(evs, this._events);
+    }
+  }
+
+  return this;
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.removeAllListeners([event], [callback])</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototyperemoveAllListeners
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;see</span><span class="name">Drip.prototype.off</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>This is an alias for <code>.off()</code>.</p>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.removeAllListeners = Drip.prototype.off;</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><h1>.emit(event, [args], [...])</h1>
+          </div>
+          <div class="ctx">
+            <h3>Drip.prototype.emit()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">eventname</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Object &#125;</span><span class="name">arguments</span><span class="desc">multiple parameters to pass to callback functions</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>Trigger <code>event</code>, passing any arguments to callback functions.</p>
+
+<pre><code> // normal event
+ drop.emit('event', arg, ...);
+
+ // namespaced as string
+ drop.emit('foo:bar', arg, ...)
+
+ // namespaced as array
+ drop.emit(['foo', 'bar'], arg, ...);
+</code></pre>
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Drip.prototype.emit = function () {
+  var ev = arguments[0]
+    , fns;
+
+  if (!this._events) return false;
+
+  if (!this._drip || (this._drip &amp;&amp; !this._drip.wildcard)) {
+    fns = this._events[ev];
+  } else if (this._drip &amp;&amp; this._drip.wildcard) {
+    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
+      , fns = [];
+
+    var addFns = function (funcs) {
+      if ('function' == typeof funcs) {
+        fns.push(funcs);
+      } else {
+        for (var i = 0; i &lt; funcs.length; i++) {
+          fns.push(funcs[i]);
+        }
+      }
+    };
+
+    var traverse = function (events, map) {
+      var event = events.shift();
+
+      if (map[event] &amp;&amp; map[event]._ &amp;&amp; !events.length)
+        addFns(map[event]._);
+
+      if (map['*'] &amp;&amp; map['*']._ &amp;&amp; !events.length)
+        addFns(map['*']._);
+
+      if (events.length) {
+        if (map[event])
+          traverse(events.slice(0), map[event]);
+
+        if (map['*'])
+          traverse(events.slice(0), map['*']);
+      }
+    };
+
+    traverse(evs, this._events);
+  }
+
+  if ('function' === typeof fns) {
+    switch (arguments.length) {
+      case 1:
+        fns.call(this);
+        break;
+      case 2:
+        fns.call(this, arguments[1]);
+        break;
+      case 3:
+        fns.call(this, arguments[1], arguments[2]);
+        break;
+      default:
+        var l = arguments.length
+          , _a = new Array(l - 1);
+
+        for (var i = 1; i &lt; l; i++) {
+          _a[i - 1] = arguments[i];
+        }
+
+        fns.apply(this, _a);
+        break;
+    }
+  } else if (Array.isArray(fns)) {
+    var l = arguments.length
+      , _a = new Array(l - 1);
+
+    for (var i = 1; i &lt; l; i++) {
+      _a[i - 1] = arguments[i];
+    }
+
+    for (var i = 0; i &lt; fns.length; ++i) {
+      fns[i].apply(this, _a);
+    }
+  }
+
+  return true;
+};</code>
+            </pre>
+          </div>
+        </article>
+      </div>
+    </section>
+    <footer>
+      <div class="branding"><p>drip is <a href="http://alogicalparadox.com">a logical paradox</a>. site generated by <a href="http://codexjs.com">codex</a>.</p>
+      </div>
+    </footer>
+  </body>
+</html>

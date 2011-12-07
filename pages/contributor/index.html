@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Installation / Help - Drip
+    <title>For Contributors - Drip
     </title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script src="/public/js/prettify.js"></script>
@@ -34,47 +34,43 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
       </div>
     </header>
     <section id="content">
-      <article><h3>The current stable version is [<a href="https://github.com/logicalparadox/drip/tree/0.2.1">0.2.1</a>].</h3>
+      <h1>For Contributors
+      </h1>
+      <article><h2>Developing</h2>
 
-<h1>Table of Contents</h1>
+<p>Please avoid making changes to the <code>dist</code> versions of drip if you are developing in the browser. All
+changes to the library are to be made to <code>lib/drip.js</code> and then packaged for the browser using the <code>make</code>
+command.</p>
 
-<ul>
-<li>Installation Instruction for node.js and browser are below.</li>
-<li><a href="/code/">API Documentation</a> outlines the publicly accessible functions with annotated source code.</li>
-<li><a href="/pages/usage/">Usage Scenarios</a> walks through several examples of using <code>drip</code>.</li>
-<li><a href="/pages/contributors/">For Contributors</a> informs those interested in contributing on how to test and other best practices.</li>
-</ul>
-
-
-<h1>Installation</h1>
-
-<p>Drip is available for both server-side and the browser.</p>
-
-<h2>Node.js</h2>
-
-<p>Package is available through <a href="http://npmjs.org">npm</a>:</p>
-
-<pre><code>npm install drip
+<pre><code>  make
 </code></pre>
 
-<h2>Browser</h2>
+<h2>Testing</h2>
 
-<p>Download your desired build:</p>
+<p>Tests are written in BDD style on <a href="http://visionmedia.github.com/mocha/">mocha test framework</a> using
+the <a href="https://github.com/logicalparadox/chai">chai assert library</a>. Tests are written to pass in both
+a node.js environment and in the browser.</p>
 
-<ul>
-<li>Uncompressed: <a href="https://raw.github.com/logicalparadox/drip/0.2.1/dist/drip.js">drip.js</a></li>
-<li>Minified: <a href="https://raw.github.com/logicalparadox/drip/0.2.1/dist/drip.min.js">drip.min.js</a></li>
-</ul>
+<p>Browsers tests are currently known to pass in Chrome 16 and Firefox 8. Please let me know if you can test
+in other browsers or other version.</p>
 
+<h3>Server Side Testing</h3>
 
-<p>Then include on your site:</p>
+<p>It&rsquo;s quite simple&hellip;</p>
 
-<pre><code>&lt;script src="/public/js/drip.js" type="text/javascript"&gt;&lt;/script&gt;
+<pre><code>  make test
 </code></pre>
 
-<h1>Where to Get Help</h1>
+<h3>Browser Side Testing</h3>
 
-<p>Please post your issues, questions, or comments to <a href="https://github.com/logicalparadox/drip/issues">GitHub Issues</a>.</p>
+<p>It&rsquo;s also quite simple. Open up <code>test/browser/index.html</code> in your nearest browser.</p>
+
+<h2>Benchmarking</h2>
+
+<p>A benchmarking suite is available but is a work in progress. To run it&hellip;</p>
+
+<pre><code>  make benchmark
+</code></pre>
       </article>
     </section>
     <footer>
