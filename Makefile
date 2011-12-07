@@ -1,6 +1,6 @@
 
 TESTS = test/*.js
-REPORTER = list
+REPORTER = dot
 BENCHMARKS = benchmarks/*.js
 
 test:

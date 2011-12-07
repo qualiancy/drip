@@ -1,4 +1,4 @@
-var should = require('should');
+var expect = require('chai').expect;
 
 var drip = require('..');
 
@@ -22,19 +22,19 @@ function Spy (fn) {
 describe('Drip simple', function () {
 
   it('should have a version', function () {
-    should.exist(drip.version);
+    expect(drip.version).to.exist;
   });
 
   describe('construction', function () {
 
     it('should not have wildcards active by default', function () {
       var drop = new drip();
-      should.not.exist(drop._drip);
+      expect(drop._drip).to.not.exist;
     });
 
     it('should not have an event queue before adding listeners', function () {
       var drop = new drip();
-      should.not.exist(drop._events);
+      expect(drop._events).to.not.exist;
     });
   });
 
@@ -44,20 +44,20 @@ describe('Drip simple', function () {
       , noop2 = function () { 2 == 2 };
 
     it('should have _events after an event is added', function() {
-      should.not.exist(drop._events);
+      expect(drop._events).to.not.exist;
       drop.on('test', noop);
-      should.exist(drop._events);
+      expect(drop._events).to.exist;
     });
 
     it('should have a single function as callback for first event', function () {
-      drop._events['test'].should.be.a('function');
-      drop._events['test'].should.eql(noop);
+      expect(drop._events['test']).to.be.a('function');
+      expect(drop._events['test']).to.eql(noop);
     });
 
     it('should change callback stack to array on second function', function () {
       drop.on('test', noop2);
-      drop._events['test'].should.be.instanceof(Array);
-      drop._events['test'].length.should.equal(2);
+      expect(drop._events['test']).to.be.instanceof(Array);
+      expect(drop._events['test']).to.have.length(2);
     });
   });
 
@@ -75,21 +75,21 @@ describe('Drip simple', function () {
     });
 
     it('should remove all listeners for a given event', function () {
-      drop._events['test'].length.should.equal(2);
+      expect(drop._events['test']).to.have.length(2);
       drop.off('test');
-      should.not.exist(drop._events['test']);
+      expect(drop._events['test']).to.not.exist;
     });
 
     it('should empty _events if no event given', function () {
-      drop._events['test2'].should.be.a('function');
-      drop._events['test3'].should.be.a('function');
+      expect(drop._events['test2']).to.be.a('function');
+      expect(drop._events['test3']).to.be.a('function');
       drop.off();
-      should.not.exist(drop._events);
+      expect(drop._events).to.not.exist;
     });
 
     it('should ignore removing events that dont exist', function () {
       drop.off('hello world');
-      drop._events['test'].length.should.equal(2);
+      expect(drop._events['test']).to.have.length(2);
     });
   });
 
@@ -104,10 +104,10 @@ describe('Drip simple', function () {
       var noop = function () {};
 
       drop.on('test', noop);
-      drop._events['test'].should.be.a('function');
+      expect(drop._events['test']).to.be.a('function');
 
       drop.off('test', noop);
-      should.not.exist(drop._events['test']);
+      expect(drop._events['test']).to.not.exist;
     });
 
     it('should remove a fn from stack if stack is an array', function () {
@@ -117,14 +117,14 @@ describe('Drip simple', function () {
       drop.on('test', noop);
       drop.on('test', noop2);
 
-      drop._events['test'].should.be.instanceof(Array);
-      drop._events['test'].length.should.equal(2);
+      expect(drop._events['test']).to.be.instanceof(Array);
+      expect(drop._events['test']).to.have.length(2);
 
       drop.off('test', noop);
 
-      drop._events['test'].should.be.a('function');
-      drop._events['test'].should.not.equal(noop);
-      drop._events['test'].should.equal(noop2);
+      expect(drop._events['test']).to.be.a('function');
+      expect(drop._events['test']).to.not.equal(noop);
+      expect(drop._events['test']).to.equal(noop2);
     });
   });
 
@@ -141,44 +141,44 @@ describe('Drip simple', function () {
       drop.on('test', spy);
       drop.emit('test');
 
-      spy.called.should.be.ok;
-      spy.calls.length.should.equal(1);
+      expect(spy.called).to.be.ok;
+      expect(spy.calls).to.have.length(1);
     });
 
     it('should emit events and pass single argument to callbacks', function () {
       var spy = Spy(function () {
-        arguments.length.should.equal(1);
+        expect(arguments).to.have.length(1);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one');
 
-      spy.called.should.be.ok;
-      spy.calls.length.should.equal(1);
+      expect(spy.called).to.be.ok;
+      expect(spy.calls).to.have.length(1);
     });
 
     it('should emit events and pass 2 arguments to callbacks', function () {
       var spy = Spy(function () {
-        arguments.length.should.equal(2);
+        expect(arguments).to.have.length(2);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one', 'two');
 
-      spy.called.should.be.ok;
-      spy.calls.length.should.equal(1);
+      expect(spy.called).to.be.ok;
+      expect(spy.calls).to.have.length(1);
     });
 
     it('should emit events and pass 3+ arguments to callbacks', function () {
       var spy = Spy(function () {
-        arguments.length.should.equal(5);
+        expect(arguments).to.have.length(5);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one', 'two', 'three', 'four', 'five');
 
-      spy.called.should.be.ok;
-      spy.calls.length.should.equal(1);
+      expect(spy.called).to.be.ok;
+      expect(spy.calls).to.have.length(1);
     });
   });
 });
