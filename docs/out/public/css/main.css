@@ -169,6 +169,8 @@ header:after {
 }
 header h1 {
   font-size: 45px;
+}
+header h1 a {
   color: #4183c4;
 }
 header p {
