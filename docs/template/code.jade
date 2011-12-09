@@ -1,13 +1,36 @@
 extends layout
 
-block content
-  - var comments = file.prepared
-  #code
-    :markdown
-      ### #{file.title} [[view on github](#{file.link})]
-    for comment in comments
+block title
+  title API Documentation for #{file.title} - #{site.title}
+
+block nav
+  ul.sections
+    for comment in file.prepared
       unless comment.ignore
-        article.codeblock
+        for tag in comment.tags
+          - if (tag.type == 'name')
+            - comment.anchor = tag.string
+            li.keepcase: a.scroll(href='#' + tag.string)= tag.string
+  ul.pages
+    li: a(href=site.ghbaseurl) Home
+    - if (files.page)
+      for page in files.page
+        - if (page.template == 'code')
+          li: a(href=site.ghbaseurl + page.href)= page.title
+  - if (files.code)
+    ul.code
+      for page in files.code
+        - if (page.template == 'code-index')
+          li.header: a(href=site.ghbaseurl + page.href)= page.title
+      for page in files.code
+        - if (page.template == 'code')
+          li: a(href=site.ghbaseurl + page.href)= page.title
+
+block content
+  #code
+    for comment in file.prepared
+      unless comment.ignore
+        article.codeblock(id=comment.anchor + '-section')
           .header!= comment.description.summary
           - if (comment.ctx && comment.ctx.string)
             .ctx
@@ -30,8 +53,10 @@ block content
                   .tag
                     span.type &#64;#{tag.type}
                     span.name #{tag.local}
+                - else if (tag.type == 'name')
+                  // ignroing this
                 - else
-                  - console.log('unknown tag')
+                  - console.log('unknown tag in file: ' + file.title)
                   - console.log(tag)
           .description!= comment.description.body
           .view-source View Source

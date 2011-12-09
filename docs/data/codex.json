@@ -1,6 +1,14 @@
 {
   "locals": {
-    "title": "Drip"
+    "title": "Drip",
+    "googleanalytics": "UA-26183904-2",
+    "mixpanel": "7f05bac62320002e876c5d202d6058ad",
+    "ghuser": "logicalparadox",
+    "ghbaseurl": "/drip",
+    "ghproject": "drip",
+    "version": "0.2.2",
+    "hasdownloads": true,
+    "description": "Drip is a event-emitter framework for [node](http://nodejs.org) and the browser that supports namespaces and wildcards with a focus on perfomance."
   },
   "code": {
     "index": {

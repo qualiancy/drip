@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>lib/drip.js - Drip
+    <title>API Documentation for lib/drip.js - Drip
     </title>
+    <script type="text/javascript">var ghuser = 'logicalparadox'
+  , ghproject = 'drip';
+
+</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script src="/drip/public/js/prettify.js"></script>
     <script src="/drip/public/js/main.js"></script>
@@ -30,34 +34,63 @@ _gaq.push(['_trackPageview']);
   </head>
   <body>
     <nav>
+      <ul class="sections">
+        <li class="keepcase"><a href="#constructor" class="scroll">constructor</a>
+        </li>
+        <li class="keepcase"><a href="#on" class="scroll">on</a>
+        </li>
+        <li class="keepcase"><a href="#many" class="scroll">many</a>
+        </li>
+        <li class="keepcase"><a href="#once" class="scroll">once</a>
+        </li>
+        <li class="keepcase"><a href="#off" class="scroll">off</a>
+        </li>
+        <li class="keepcase"><a href="#removeAllListeners" class="scroll">removeAllListeners</a>
+        </li>
+        <li class="keepcase"><a href="#emit" class="scroll">emit</a>
+        </li>
+      </ul>
       <ul class="pages">
-        <li><a href="/drip/">Installation / Help</a>
+        <li><a href="/drip">Home</a>
         </li>
-        <li><a href="/drip/code/">API Documentation</a>
-        </li>
-        <li><a href="/drip/pages/usage/">Usage Scenarios</a>
-        </li>
-        <li><a href="/drip/pages/contributor/">For Contributors</a>
+      </ul>
+      <ul class="code">
+        <li><a href="/drip/code/index.html">lib/drip.js</a>
         </li>
       </ul>
     </nav>
     <header>
       <h1><a href="/drip">Drip</a>
       </h1>
-      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the
-browser that supports namespaces and wildcards with a focus on perfomance.</p>
+      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the browser that supports namespaces and wildcards with a focus on perfomance.</p>
       </div>
-      <div class="gh"><a href="https://github.com/logicalparadox/drip" class="button github">Fork me on GitHub</a>
-        <div class="clone">git clone https://github.com/logicalparadox/drip
+      <div class="gh">
+        <h4>Latest Update to Github
+        </h4>
+        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+        </div>
+        <div id="latestCommitMessage">Loading...
+        </div>
+        <div id="clone"><a href="https://github.com/logicalparadox/drip" class="button fork">Fork me on GitHub</a>
+          <div class="clone">git clone https://github.com/logicalparadox/backbone.iobind.git
+          </div>
+        </div>
+        <div id="links"><a id="repoIssues" href="https://github.com/logicalparadox/drip/issues">GitHub Issues</a><a id="repoDownload" href="https://github.com/downloads/logicalparadox/drip/drip-0.2.2.zip">Download v0.2.2
+</a>
         </div>
       </div>
     </header>
     <section id="content">
-      <div id="code"><h3>lib/drip.js <a href="https://github.com/logicalparadox/drip/blob/master/lib/drip.js">[view on github</a>]</h3>
-        <article class="codeblock">
+      <div id="code">
+        <article id="constructor-section" class="codeblock">
           <div class="header"><h1>Drip#constructor</h1>
           </div>
+          <div class="ctx">
+            <h3>Drip()
+            </h3>
+          </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span>
             </div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
@@ -94,7 +127,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="on-section" class="codeblock">
           <div class="header"><h1>.on(event, callback)</h1>
           </div>
           <div class="ctx">
@@ -102,6 +135,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span>
@@ -170,7 +204,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="many-section" class="codeblock">
           <div class="header"><h1>.many(event, ttl, callback)</h1>
           </div>
           <div class="ctx">
@@ -178,6 +212,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Integer &#125;</span><span class="name">TTL</span><span class="desc">Times to listen</span>
@@ -212,7 +247,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="once-section" class="codeblock">
           <div class="header"><h1>.once(event, callback)</h1>
           </div>
           <div class="ctx">
@@ -220,6 +255,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span>
@@ -242,7 +278,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="off-section" class="codeblock">
           <div class="header"><h1>.off([event], [callback])</h1>
           </div>
           <div class="ctx">
@@ -250,6 +286,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">optional</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc">optional</span>
@@ -358,7 +395,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="removeAllListeners-section" class="codeblock">
           <div class="header"><h1>.removeAllListeners([event], [callback])</h1>
           </div>
           <div class="ctx">
@@ -366,6 +403,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;see</span><span class="name">Drip.prototype.off</span>
             </div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
@@ -380,7 +418,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </pre>
           </div>
         </article>
-        <article class="codeblock">
+        <article id="emit-section" class="codeblock">
           <div class="header"><h1>.emit(event, [args], [...])</h1>
           </div>
           <div class="ctx">
@@ -388,6 +426,7 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
             </h3>
           </div>
           <div class="tags">
+            <!-- ignroing this-->
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">eventname</span><span class="desc"></span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Object &#125;</span><span class="name">arguments</span><span class="desc">multiple parameters to pass to callback functions</span>
@@ -496,7 +535,8 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
       </div>
     </section>
     <footer>
-      <div class="branding"><p>drip is <a href="http://alogicalparadox.com">a logical paradox</a>. site generated by <a href="http://codexjs.com">codex</a>.</p>
+      <div class="branding">Drip is&nbsp;<a href="http://alogicalparadox.com">a logical paradox</a>. site generated by
+<a href="http://codexjs.com">codex.</a>
       </div>
     </footer>
   </body>

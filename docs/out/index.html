@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Installation / Help - Drip
+    <title>Home - Drip
     </title>
+    <script type="text/javascript">var ghuser = 'logicalparadox'
+  , ghproject = 'drip';
+
+</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script src="/drip/public/js/prettify.js"></script>
     <script src="/drip/public/js/main.js"></script>
@@ -30,38 +34,45 @@ _gaq.push(['_trackPageview']);
   </head>
   <body>
     <nav>
-      <ul class="pages">
-        <li><a href="/drip/">Installation / Help</a>
+      <ul class="sections">
+        <li><a href="#installation" class="scroll">Installation</a>
         </li>
-        <li><a href="/drip/code/">API Documentation</a>
+        <li><a href="#usage" class="scroll">Usage Scenarios</a>
         </li>
-        <li><a href="/drip/pages/usage/">Usage Scenarios</a>
+        <li><a href="#contributor" class="scroll">For Contributors</a>
         </li>
-        <li><a href="/drip/pages/contributor/">For Contributors</a>
+      </ul>
+      <ul class="code">
+        <li><a href="/drip/code/index.html">lib/drip.js</a>
         </li>
       </ul>
     </nav>
     <header>
       <h1><a href="/drip">Drip</a>
       </h1>
-      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the
-browser that supports namespaces and wildcards with a focus on perfomance.</p>
+      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the browser that supports namespaces and wildcards with a focus on perfomance.</p>
       </div>
-      <div class="gh"><a href="https://github.com/logicalparadox/drip" class="button github">Fork me on GitHub</a>
-        <div class="clone">git clone https://github.com/logicalparadox/drip
+      <div class="gh">
+        <h4>Latest Update to Github
+        </h4>
+        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+        </div>
+        <div id="latestCommitMessage">Loading...
+        </div>
+        <div id="clone"><a href="https://github.com/logicalparadox/drip" class="button fork">Fork me on GitHub</a>
+          <div class="clone">git clone https://github.com/logicalparadox/backbone.iobind.git
+          </div>
+        </div>
+        <div id="links"><a id="repoIssues" href="https://github.com/logicalparadox/drip/issues">GitHub Issues</a><a id="repoDownload" href="https://github.com/downloads/logicalparadox/drip/drip-0.2.2.zip">Download v0.2.2
+</a>
         </div>
       </div>
     </header>
     <section id="content">
-      <article><h3>The current stable version is [<a href="https://github.com/logicalparadox/drip/tree/0.2.2">0.2.2</a>].</h3>
-
-<h1>Table of Contents</h1>
-
-<ul><li>Installation Instruction for node.js and browser are below.</li><li><a href="code/">API Documentation</a> outlines the publicly accessible functions with annotated source code.</li><li><a href="pages/usage/">Usage Scenarios</a> walks through several examples of using <code>drip</code>.</li><li><a href="pages/contributors/">For Contributors</a> informs those interested in contributing on how to test and other best practices.</li></ul>
-
-<h1>Installation</h1>
-
-<p>Drip is available for both server-side and the browser.</p>
+      <article>
+        <h1 id="installation-section"><a name="installation">Installation</a>
+        </h1>
+        <section><p>Drip is available for both server-side and the browser.</p>
 
 <h2>Node.js</h2>
 
@@ -71,21 +82,57 @@ browser that supports namespaces and wildcards with a focus on perfomance.</p>
 
 <h2>Browser</h2>
 
-<p>Download your desired build:</p>
+<p>Download the package above.</p>
 
-<ul><li>Uncompressed: <a href="https://raw.github.com/logicalparadox/drip/0.2.2/dist/drip.js">drip.js</a></li><li>Minified: <a href="https://raw.github.com/logicalparadox/drip/0.2.2/dist/drip.min.js">drip.min.js</a></li></ul>
+<p>And include either the normal or minimized build in your HTML header.</p>
 
-<p>Then include on your site:</p>
+<pre><code>&lt;script src=&quot;/public/js/drip.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;/public/js/drip.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre>
+        </section>
+        <h1 id="usage-section"><a name="usage">Usage Scenarios</a>
+        </h1>
+        <section><p>Writing this. Please hold.</p>
+        </section>
+        <h1 id="contributor-section"><a name="contributor">For Contributors</a>
+        </h1>
+        <section><h2>Developing</h2>
 
-<pre><code>&lt;script src=&quot;/public/js/drip.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre>
+<p>Please avoid making changes to the <code>dist</code> versions of drip if you are developing in the browser. All
+changes to the library are to be made to <code>lib/drip.js</code> and then packaged for the browser using the <code>make</code>
+command.</p>
 
-<h1>Where to Get Help</h1>
+<pre><code>  make</code></pre>
 
-<p>Please post your issues, questions, or comments to <a href="https://github.com/logicalparadox/drip/issues">GitHub Issues</a>.</p>
+<h2>Testing</h2>
+
+<p>Tests are written in BDD style on <a href="http://visionmedia.github.com/mocha/">mocha test framework</a> using
+the <a href="https://github.com/logicalparadox/chai">chai assert library</a>. Tests are written to pass in both
+a node.js environment and in the browser.</p>
+
+<p>Browsers tests are currently known to pass in Chrome 16 and Firefox 8. Please let me know if you can test
+in other browsers or other version.</p>
+
+<h3>Server Side Testing</h3>
+
+<p>It&#39;s quite simple...</p>
+
+<pre><code>  make test</code></pre>
+
+<h3>Browser Side Testing</h3>
+
+<p>It&#39;s also quite simple. Open up <code>test/browser/index.html</code> in your nearest browser.</p>
+
+<h2>Benchmarking</h2>
+
+<p>A benchmarking suite is available but is a work in progress. To run it...</p>
+
+<pre><code>  make benchmark</code></pre>
+        </section>
       </article>
     </section>
     <footer>
-      <div class="branding"><p>drip is <a href="http://alogicalparadox.com">a logical paradox</a>. site generated by <a href="http://codexjs.com">codex</a>.</p>
+      <div class="branding">Drip is&nbsp;<a href="http://alogicalparadox.com">a logical paradox</a>. site generated by
+<a href="http://codexjs.com">codex.</a>
       </div>
     </footer>
   </body>

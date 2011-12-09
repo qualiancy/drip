@@ -1,6 +1,7 @@
 ---
   title: For Contributors
   weight: 10
+  render-file: false
 ---
 
 ## Developing
