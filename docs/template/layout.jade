@@ -61,7 +61,7 @@ html(lang='en')
           #latestCommitMessage Loading...
           #clone
             a.button.fork(href='https://github.com/' + site.ghuser + '/' + site.ghproject) Fork me on GitHub
-            .clone git clone https://github.com/#{site.ghuser}/backbone.iobind.git
+            .clone git clone https://github.com/#{site.ghuser}/#{site.ghproject}.git
           #links
             a#repoIssues(href='https://github.com/' + site.ghuser + '/' + site.ghproject + '/issues') GitHub Issues
             - if (site.hasdownloads)

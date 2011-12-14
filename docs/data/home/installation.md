@@ -6,13 +6,13 @@
 
 Drip is available for both server-side and the browser.
 
-## Node.js
+### Node.js
 
 Package is available through [npm](http://npmjs.org):
 
     npm install drip
 
-## Browser
+### Browser
 
 Download the package above.
 
