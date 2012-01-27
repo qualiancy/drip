@@ -10,6 +10,7 @@
   else this[name] = definition();
 }('drip', function () {
   var module = {};
+
 /*!
  * drip - Node.js event emitter.
  * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
@@ -49,6 +50,7 @@ exports.version = '0.2.2';
  * * _delimeter_ {String} defaults to `:`
  * * _wildcard_ {Boolean} defaults to false
  *
+ * @name constructor
  * @param {Object} options
  * @api public
  */
@@ -79,6 +81,7 @@ function Drip (opts) {
  * An array can be passed for event when namespacing is enabled
  * if that is your preference.
  *
+ * @name on
  * @param {String|Array} event
  * @param {Function} callback
  * @api public
@@ -134,6 +137,7 @@ Drip.prototype.on = function (ev, fn) {
  *      // 3 times then auto turn off callback
  *      drop.many('event', 3, callback)
  *
+ * @name many
  * @param {String|Array} event
  * @param {Integer} TTL Times to listen
  * @param {Function} callback
@@ -161,6 +165,7 @@ Drip.prototype.many = function (ev, times, fn) {
  *
  *      drip.once('event', callback)
  *
+ * @name once
  * @param {String|Array} event
  * @param {Function} callback
  * @api public
@@ -180,6 +185,7 @@ Drip.prototype.once = function (ev, fn) {
  *
  *      drop.off('event', callback);
  *
+ * @name off
  * @param {String|Array} event optional
  * @param {Function} callback optional
  * @api public
@@ -281,6 +287,7 @@ Drip.prototype.off = function (ev, fn) {
  *
  * This is an alias for `.off()`.
  *
+ * @name removeAllListeners
  * @see Drip.prototype.off
  * @api public
  */
@@ -301,6 +308,7 @@ Drip.prototype.removeAllListeners = Drip.prototype.off;
  *      // namespaced as array
  *      drop.emit(['foo', 'bar'], arg, ...);
  *
+ * @name emit
  * @param {String|Array} eventname
  * @param {String|Object} arguments multiple parameters to pass to callback functions
  * @api public
@@ -386,6 +394,23 @@ Drip.prototype.emit = function () {
 
   return true;
 };
+
+/**
+ * .proxyEvent(event, target);
+ */
+
+Drip.prototype.proxyEvent = function (ev, target, context) {
+  context = context || target;
+  this.on(ev, function () {
+    var args = Array.prototype.slice.call(arguments)
+      , event = [ ev ].concat(args);
+    target.emit.apply(context, event);
+  });
+};
+
+
+
+
 
   return exports;
 });
