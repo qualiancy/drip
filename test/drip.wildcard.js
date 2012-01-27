@@ -1,4 +1,7 @@
-var expect = require('chai').expect;
+if (!chai)
+  var chai = require('chai');
+
+var expect = chai.expect;
 
 if (!drip) {
   var drip = require('..');
