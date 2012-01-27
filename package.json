@@ -20,9 +20,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "codex": "0.0.4",
-    "mocha": "0.3.x",
-    "chai": "0.0.x",
+    "codex": "0.0.6",
+    "mocha": "*",
+    "chai": "*",
     "matcha": "0.0.x",
     "folio": "0.1.x",
     "eventemitter2": "0.4.x"
