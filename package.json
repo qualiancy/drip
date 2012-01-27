@@ -13,10 +13,9 @@
   "scripts": {
     "benchmark": "make benchmark",
     "test": "make test",
-    "prepublish" : "npm prune"
   },
   "engines": {
-    "node": ">= 0.4.8 < 0.7.0"
+    "node": ">= 0.4.8"
   },
   "dependencies": {},
   "devDependencies": {
@@ -24,7 +23,7 @@
     "mocha": "*",
     "chai": "*",
     "matcha": "0.0.x",
-    "folio": "0.1.x",
+    "folio": "0.2.x",
     "eventemitter2": "0.4.x"
   }
 }
