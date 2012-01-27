@@ -245,6 +245,30 @@ describe('Drip wildcard', function () {
         expect(spy.called).to.be.ok;
         expect(spy.calls).to.have.length(1);
       });
+
+      it('should allow for `only` to function correctly', function () {
+        var spy = Spy();
+
+        drop.once('test', spy);
+        drop.emit('test');
+        drop.emit('test');
+
+        expect(spy.called).to.be.ok;
+        expect(spy.calls).to.have.length(1);
+      });
+
+      it('should allow for `many` to function correctly', function () {
+        var spy = Spy();
+
+        drop.many('test', 2, spy);
+        drop.emit('test');
+        drop.emit('test');
+        drop.emit('test');
+
+        expect(spy.called).to.be.ok;
+        expect(spy.calls).to.have.length(2);
+      });
+
     });
 
     describe('wildcarded', function () {
