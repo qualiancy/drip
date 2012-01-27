@@ -1,4 +1,26 @@
 
+0.2.3 / 2012-01-27 
+==================
+
+  * Merge branch 'feature/proxyListener'
+  * tests detect browser or node run
+  * browser tests updated
+  * package.json typo
+  * wildcard only tests
+  * proxy event tests
+  * browser update
+  * added #proxyEvent
+  * updated compile to support folio updates
+  * deps updates / removed < node v0.7.0 from engines
+  * package updates
+  * [docs] small changes to template + output
+  * docs uses cleaner template
+  * npm ignores docs folder
+  * added addition tags to comments for codex doc generation
+  * [docs] added analytics
+  * docs are correctly linked together
+  * codex 0.0.4 support
+
 0.2.2 / 2011-12-07
 ==================
 

@@ -3,7 +3,7 @@
   "name": "drip",
   "description": "An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.",
   "keyword": [ "event", "events", "eventemitter", "emitter" ],
-  "version": "0.2.2",
+  "version": "0.2.3",
   "homepage": "http://logicalparadox.github.com/drip",
   "repository": {
     "type": "git",
