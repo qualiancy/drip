@@ -12,19 +12,18 @@
   "main": "index",
   "scripts": {
     "benchmark": "make benchmark",
-    "test": "make test",
-    "prepublish" : "npm prune"
+    "test": "make test"
   },
   "engines": {
-    "node": ">= 0.4.8 < 0.7.0"
+    "node": ">= 0.4.8"
   },
   "dependencies": {},
   "devDependencies": {
-    "codex": "0.0.4",
-    "mocha": "0.3.x",
-    "chai": "0.0.x",
+    "codex": "0.0.6",
+    "mocha": "*",
+    "chai": "*",
     "matcha": "0.0.x",
-    "folio": "0.1.x",
+    "folio": "0.2.x",
     "eventemitter2": "0.4.x"
   }
 }

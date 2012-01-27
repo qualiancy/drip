@@ -1,4 +1,7 @@
-var expect = require('chai').expect;
+if (!chai)
+  var chai = require('chai');
+
+var expect = chai.expect;
 
 if (!drip) {
   var drip = require('..');
@@ -181,6 +184,29 @@ describe('Drip simple', function () {
 
       expect(spy.called).to.be.ok;
       expect(spy.calls).to.have.length(1);
+    });
+  });
+
+  describe('event proxy', function () {
+    var drop = new drip()
+      , proxy = new drip();
+
+    beforeEach(function ()  {
+      drop.removeAllListeners();
+      proxy.removeAllListeners();
+    });
+
+    it('should allow an event to be proxied to another drip instance', function () {
+      var spy = Spy(function (proxied) {
+        expect(proxied).to.be.true;
+      });
+
+      drop.on('proxyme', spy);
+      proxy.proxyEvent('proxyme', drop);
+      proxy.emit('proxyme', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
     });
   });
 });
