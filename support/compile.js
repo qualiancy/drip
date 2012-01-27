@@ -3,7 +3,7 @@ var folio = require('folio')
   , fs = require('fs');
 
 
-var drip = new folio.glossary([
+var drip = new folio.Glossary([
     path.join(__dirname, '..', 'lib', 'drip.js')
   ], {
     prefix: fs.readFileSync(path.join(__dirname, '..', 'lib', 'browser', 'prefix.js'), 'utf8'),
@@ -13,10 +13,10 @@ var drip = new folio.glossary([
 drip.compile(function (err, source) {
   var copyright = fs.readFileSync(path.join(__dirname, '..', 'lib', 'browser', 'copyright.js'));
   fs.writeFileSync(path.join(__dirname, '..', 'dist', 'drip.js'), copyright + '\n' + source);
-  console.log('Build successful: ' + '\tbackbone.iobind.min.js');
+  console.log('Build successful: ' + '\tdrip.js');
 });
 
-var drip_min = new folio.glossary([
+var drip_min = new folio.Glossary([
     path.join(__dirname, '..', 'lib', 'drip.js')
   ], {
     minify: true,
