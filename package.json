@@ -12,7 +12,7 @@
   "main": "index",
   "scripts": {
     "benchmark": "make benchmark",
-    "test": "make test",
+    "test": "make test"
   },
   "engines": {
     "node": ">= 0.4.8"
