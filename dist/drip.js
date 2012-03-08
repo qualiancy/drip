@@ -27,7 +27,7 @@ var exports = module.exports = Drip;
  * version export
  */
 
-exports.version = '0.2.2';
+exports.version = '0.2.4';
 
 /**
  * # Drip#constructor
@@ -126,7 +126,7 @@ Drip.prototype.on = function (ev, fn) {
     traverse(evs, store);
   }
 
-  return true;
+  return this;
 };
 
 /**
@@ -392,7 +392,7 @@ Drip.prototype.emit = function () {
     }
   }
 
-  return true;
+  return this;
 };
 
 /**
