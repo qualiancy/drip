@@ -52,11 +52,7 @@ describe('Drip simple', function () {
       expect(drop._events).to.not.exist;
       drop.on('test', noop);
       expect(drop._events).to.exist;
-    });
-
-    it('should have a single function as callback for first event', function () {
-      expect(drop._events['test']).to.be.a('function');
-      expect(drop._events['test']).to.eql(noop);
+      expect(drop._events['test']).to.be.instanceof(Array);
     });
 
     it('should change callback stack to array on second function', function () {
@@ -86,10 +82,10 @@ describe('Drip simple', function () {
     });
 
     it('should empty _events if no event given', function () {
-      expect(drop._events['test2']).to.be.a('function');
-      expect(drop._events['test3']).to.be.a('function');
+      expect(drop._events['test2']).to.be.an('array');
+      expect(drop._events['test3']).to.be.an('array');
       drop.off();
-      expect(drop._events).to.not.exist;
+      expect(Object.keys(drop._events)).to.have.length(0);
     });
 
     it('should ignore removing events that dont exist', function () {
@@ -109,7 +105,7 @@ describe('Drip simple', function () {
       var noop = function () {};
 
       drop.on('test', noop);
-      expect(drop._events['test']).to.be.a('function');
+      expect(drop._events['test']).to.be.an('array');
 
       drop.off('test', noop);
       expect(drop._events['test']).to.not.exist;

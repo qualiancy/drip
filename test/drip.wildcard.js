@@ -70,21 +70,21 @@ describe('Drip wildcard', function () {
       });
 
       it('should have _events after an event is added', function() {
-        expect(drop._events).to.not.exist;
+        expect(Object.keys(drop._events)).to.have.length(0);
         drop.on('test', noop);
         expect(drop._events).to.exist.and.to.be.a('object');
       });
 
       it('should have a single function as callback for first event', function () {
         drop.on('test', noop);
-        expect(drop._events['test']._).to.be.a('function');
-        expect(drop._events['test']._).to.equal(noop);
+        expect(drop._events['test']._).to.be.an('array');
+        expect(drop._events['test']._[0]).to.equal(noop);
       });
 
       it('should change callback stack to array on second function', function () {
         drop.on('test', noop);
         drop.on('test', noop2);
-        expect(drop._events['test']._).to.be.instanceof(Array);
+        expect(drop._events['test']._).to.be.an('array');
         expect(drop._events['test']._).to.have.length(2);
       });
     });
@@ -99,27 +99,27 @@ describe('Drip wildcard', function () {
       });
 
       it('should have _events after an array event is added', function() {
-        expect(drop._events).to.not.exist;
+        expect(Object.keys(drop._events)).to.have.length(0);
         drop.on([ 'test', '*' ], noop);
         expect(drop._events).to.exist.and.be.a('object');
       });
 
       it('should have _events after a string event is added', function() {
-        expect(drop._events).to.not.exist;
+        expect(Object.keys(drop._events)).to.have.length(0);
         drop.on('test:*', noop);
         expect(drop._events).to.exist.and.be.a('object');
       });
 
       it('should have a single function as callback for first event', function () {
         drop.on('test:*', noop);
-        expect(drop._events['test']['*']._).to.be.a('function');
-        expect(drop._events['test']['*']._).to.equal(noop);
+        expect(drop._events['test']['*']._).to.be.an('array');
+        expect(drop._events['test']['*']._[0]).to.equal(noop);
       });
 
       it('should change callback stack to array on second function', function () {
         drop.on('test:*', noop);
         drop.on([ 'test', '*' ], noop2);
-        expect(drop._events['test']['*']._).to.be.instanceof(Array);
+        expect(drop._events['test']['*']._).to.be.an('array');
         expect(drop._events['test']['*']._).to.have.length(2);
       });
     });
@@ -146,10 +146,10 @@ describe('Drip wildcard', function () {
     });
 
     it('should empty _events if no event given', function () {
-      expect(drop._events['test']['hello']._).to.be.a('function');
-      expect(drop._events['*']['test']._).to.be.a('function');
+      expect(drop._events['test']['hello']._).to.be.an('array');
+      expect(drop._events['*']['test']._).to.be.an('array');
       drop.off();
-      expect(drop._events).to.not.exist;
+      expect(Object.keys(drop._events)).to.have.length(0);
     });
 
     it('should ignore removing events that dont exist', function () {
@@ -170,7 +170,7 @@ describe('Drip wildcard', function () {
       var noop = function () {};
 
       drop.on('foo:bar', noop);
-      expect(drop._events['foo']['bar']._).to.be.a('function');
+      expect(drop._events['foo']['bar']._).to.be.an('array');
 
       drop.off('foo:bar', noop);
       expect(drop._events).to.not.exist;
