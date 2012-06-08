@@ -23,7 +23,6 @@
     "mocha": "*",
     "chai": "*",
     "matcha": "0.0.x",
-    "folio": "0.2.x",
-    "eventemitter2": "0.4.x"
+    "folio": "0.2.x"
   }
 }
