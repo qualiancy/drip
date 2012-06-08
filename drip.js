@@ -54,6 +54,7 @@ exports.version = '0.2.4';
  * @param {Object} options
  * @api public
  */
+
 function Drip (opts) {
   if (opts) {
     this._drip = {};
@@ -66,7 +67,7 @@ function Drip (opts) {
  * # .on(event, callback)
  *
  * Bind a `callback` function to all emits of `event`.
- * Wildcards `*`, will be executed for every event. At
+ * Wildcards `*`, will be executed for every event at
  * that heirarchy.
  *
  *      // normal events
@@ -88,38 +89,23 @@ function Drip (opts) {
  */
 
 Drip.prototype.on = function (ev, fn) {
-
   if (!this._drip || (this._drip && !this._drip.wildcard)) {
     var map = this._events || (this._events = {});
-
-    if (!map[ev]) {
-      map[ev] = fn;
-    } else if ('function' === typeof map[ev]) {
-      map[ev] = [ map[ev], fn ];
-    } else {
-      map[ev].push(fn);
-    }
-
+    if (!map[ev]) map[ev] = [ fn ];
+    else map[ev].push(fn);
   } else if (this._drip && this._drip.wildcard) {
     var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
       , store = this._events || (this._events = {});
 
-    var traverse = function (events, map) {
+    function traverse (events, map) {
       var event = events.shift();
       map[event] = map[event] || {};
 
       if (events.length) {
         traverse(events, map[event]);
       } else {
-
-        if (!map[event]._) {
-          map[event]._= fn;
-        } else if ('function' === typeof map[event]._) {
-          map[event]._ = [ map[event]._, fn ];
-        } else {
-          map[event]._.push(fn);
-        }
-
+        if (!map[event]._) map[event]._= [ fn ];
+        else map[event]._.push(fn);
       }
     };
 
@@ -147,10 +133,8 @@ Drip.prototype.on = function (ev, fn) {
 Drip.prototype.many = function (ev, times, fn) {
   var self = this;
 
-  var wrap = function() {
-    if (--times === 0) {
-      self.off(ev, wrap);
-    }
+  function wrap () {
+    if (--times === 0) self.off(ev, wrap);
     fn.apply(null, arguments);
   };
 
@@ -192,86 +176,61 @@ Drip.prototype.once = function (ev, fn) {
  */
 
 Drip.prototype.off = function (ev, fn) {
-  if (!this._events) return false;
-
-  if (arguments.length === 0) {
-    delete this._events;
-    return true;
+  if (!this._events || arguments.length === 0) {
+    this._events = {};
+    return this;
   }
 
   if (!this._drip || (this._drip && !this._drip.wildcard)) {
     if ('function' !== typeof fn) {
       this._events[ev] = null;
-      return true;
+      return this;
     }
 
     var fns = this._events[ev];
 
     if (!fns) {
-      return false;
+      return this;
     } else if ('function' === typeof fns && fns == fn) {
       this._events[ev] = null;
     } else if (Array.isArray(fns)) {
-      for (var i = 0; i < fns.length; i++) {
+      for (var i = 0; i < fns.length; i++)
         if (fns[i] == fn) fns.splice(i, 1);
-      }
-
-      if (fns.length === 0)
-        this._events[ev] = null;
-
-      if (fns.length == 1)
-        this._events[ev] = fns[0];
+      if (fns.length === 0) this._events[ev] = null;
+      else if (fns.length === 1) this._events[ev] = fns[0];
     }
   } else {
     var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter);
 
     if (evs.length === 1) {
       if (this._events[ev]) this._events[ev]._ = null;
-      return true;
+      return this;
     } else {
-      var isEmpty = function (obj) {
-        for (var name in obj) {
+      function isEmpty (obj) {
+        for (var name in obj)
           if (obj[name] && name != '_') return false;
-        }
         return true;
       };
 
-      var clean = function (event) {
+      function clean (event) {
         if (fn && 'function' === typeof fn) {
-          for (var i = 0; i < event._.length; i++) {
-            if (fn == event._[i]) {
-              event._.splice(i, 1);
-            }
-          }
-
-          if (event._.length === 0)
-            event._ = null;
-
-          if (event._ && event._.length == 1)
-            event._ = event._[0];
+          for (var i = 0; i < event._.length; i++)
+            if (fn == event._[i]) event._.splice(i, 1);
+          if (event._.length === 0) event._ = null;
+          if (event._ && event._.length == 1) event._ = event._[0];
         } else {
           event._ = null;
         }
 
-        if (!event._ && isEmpty(event))
-          event = null;
-
+        if (!event._ && isEmpty(event)) event = null;
         return event;
       };
 
-      var traverse = function (events, map) {
+      function traverse (events, map) {
         var event = events.shift();
-
-        if (map[event] && map[event]._ && !events.length)
-          map[event] = clean(map[event]);
-
-        if (map[event] && events.length)
-          map[event] = traverse(events, map[event]);
-
-        if (!map[event]) {
-          if (isEmpty(map)) map = null;
-        }
-
+        if (map[event] && map[event]._ && !events.length) map[event] = clean(map[event]);
+        if (map[event] && events.length) map[event] = traverse(events, map[event]);
+        if (!map[event] && isEmpty(map)) map = null;
         return map;
       };
 
@@ -315,85 +274,78 @@ Drip.prototype.removeAllListeners = Drip.prototype.off;
  */
 
 Drip.prototype.emit = function () {
+  if (!this._events) return this;
+
+  var ev = arguments[0]
+    , fns = getCallbacks.call(this, ev);
+
+  if ('function' === typeof fns) {
+    if (arguments.length === 1) fns.call(this);
+    else if (arguments.length === 2) fns.call(this, arguments[1]);
+    else if (arguments.length === 3) fns.call(this, arguments[1], arguments[2]);
+    else {
+      var l = arguments.length
+        , _a = new Array(l - 1);
+      for (var i = 1; i < l; i++) _a[i - 1] = arguments[i];
+      fns.apply(this, _a);
+    }
+  } else {
+    var la = arguments.length
+      , _a = new Array(la - 1);
+    for (var ia = 1; ia < la; ia++) _a[ia - 1] = arguments[ia];
+    for (var i = 0, l = fns.length; i < l; i++) {
+      if (_a.length === 0) fns[i].call(this);
+      else if (_a.length === 1) fns[i].call(this, _a[0]);
+      else if (_a.length === 2) fns[i].call(this, _a[0], _a[1]);
+      else fns[i].apply(this, _a);
+    }
+  }
+
+  return this;
+};
+
+
+Drip.prototype.has = function () {
+  if (!this._events) return false;
+  var ev = arguments[0]
+    , fns = getCallbacks.call(this, ev);
+  return fns.length > 0;
+}
+
+function getCallbacks () {
   var ev = arguments[0]
     , fns;
-
-  if (!this._events) return false;
 
   if (!this._drip || (this._drip && !this._drip.wildcard)) {
     fns = this._events[ev];
   } else if (this._drip && this._drip.wildcard) {
-    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
-      , fns = [];
+    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter);
+    fns = [];
 
-    var addFns = function (funcs) {
-      if ('function' == typeof funcs) {
-        fns.push(funcs);
-      } else {
-        for (var i = 0; i < funcs.length; i++) {
-          fns.push(funcs[i]);
-        }
-      }
-    };
-
-    var traverse = function (events, map) {
+    function traverse (events, map) {
       var event = events.shift();
 
-      if (map[event] && map[event]._ && !events.length)
-        addFns(map[event]._);
+      if (map[event] && map[event]._ && !events.length) {
+        if ('function' == typeof map[event]._) fns.push(map[event]._);
+        else fns = fns.concat(map[event]._);
+      }
 
-      if (map['*'] && map['*']._ && !events.length)
-        addFns(map['*']._);
+      if (map['*'] && map['*']._ && !events.length) {
+        if ('function' == typeof map['*']._) fns.push(map['*']._);
+        else fns = fns.concat(map['*']._);
+      }
 
       if (events.length) {
-        if (map[event])
-          traverse(events.slice(0), map[event]);
-
-        if (map['*'])
-          traverse(events.slice(0), map['*']);
+        if (map[event]) traverse(events.slice(0), map[event]);
+        if (map['*']) traverse(events.slice(0), map['*']);
       }
     };
 
     traverse(evs, this._events);
   }
 
-  if ('function' === typeof fns) {
-    switch (arguments.length) {
-      case 1:
-        fns.call(this);
-        break;
-      case 2:
-        fns.call(this, arguments[1]);
-        break;
-      case 3:
-        fns.call(this, arguments[1], arguments[2]);
-        break;
-      default:
-        var l = arguments.length
-          , _a = new Array(l - 1);
-
-        for (var i = 1; i < l; i++) {
-          _a[i - 1] = arguments[i];
-        }
-
-        fns.apply(this, _a);
-        break;
-    }
-  } else if (Array.isArray(fns)) {
-    var l = arguments.length
-      , _a = new Array(l - 1);
-
-    for (var i = 1; i < l; i++) {
-      _a[i - 1] = arguments[i];
-    }
-
-    for (var i = 0; i < fns.length; ++i) {
-      fns[i].apply(this, _a);
-    }
-  }
-
-  return this;
-};
+  return fns;
+}
 
 /**
  * .proxyEvent(event, target);
@@ -407,8 +359,6 @@ Drip.prototype.proxyEvent = function (ev, target, context) {
     target.emit.apply(context, event);
   });
 };
-
-
 
 
 
