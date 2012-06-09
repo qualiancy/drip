@@ -181,6 +181,40 @@ describe('Drip simple', function () {
       expect(spy.called).to.be.ok;
       expect(spy.calls).to.have.length(1);
     });
+
+    it('can emit events that do not have listeners', function () {
+      expect(function () {
+        drop.on('test', function () {});
+        drop.emit('universe', 1);
+      }).to.not.throw();
+    });
+  });
+
+  describe('#has', function () {
+    var drop = new drip();
+
+    beforeEach(function () {
+      drop.off();
+    });
+
+    it('can determine if there are callbacks for an event', function () {
+      drop.on('hello', function () {});
+
+      expect(drop.has('hello')).to.be.true;
+      expect(drop.has('universe')).to.be.false;
+    });
+
+    it('can determine if a specific function is a callback for an event', function () {
+      var fn = function () { return 1 === 1 }
+        , fn2 = function () { return 2 === 2 };
+
+      drop.on('hello', fn);
+
+      expect(drop.has('hello', fn)).to.be.true;
+      expect(drop.has('universe', fn)).to.be.false;
+      expect(drop.has('hello', fn2)).to.be.false;
+    });
+
   });
 
   describe('event proxy', function () {

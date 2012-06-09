@@ -342,4 +342,33 @@ describe('Drip wildcard', function () {
 
   });
 
+  describe('#has', function () {
+    var drop = new drip(wc);
+
+    beforeEach(function () {
+      drop.off();
+    });
+
+    it('can determine if there are callbacks for an event', function () {
+      drop.on('hello:universe', function () {});
+      drop.on('hello:*', function () {});
+
+      expect(drop.has('hello:universe')).to.be.true;
+      expect(drop.has('hello:*')).to.be.true;
+      expect(drop.has('universe:hello')).to.be.false;
+      expect(drop.has('*:hello')).to.be.false;
+      expect(drop.has('universe:*')).to.be.false;
+    });
+
+    xit('can determine if a specific function is a callback for an event', function () {
+      var fn = function () { return 1 === 1 }
+        , fn2 = function () { return 2 === 2 };
+
+      drop.on('hello:universe', fn);
+
+      expect(drop.has('hello:universe', fn)).to.be.true;
+      expect(drop.has('hello:universe', fn2)).to.be.false;
+    });
+  });
+
 });
