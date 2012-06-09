@@ -418,7 +418,7 @@ describe('Drip wildcard', function () {
 
   describe('event bind', function () {
 
-    var drop = new drip()
+    var drop = new drip(wc)
       , orig = new drip();
 
     beforeEach(function () {
@@ -454,6 +454,48 @@ describe('Drip wildcard', function () {
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(2);
+    });
+
+    it('can bind with ns to event of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('server:orig', spy);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can unbind with ns to event of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('server:orig', spy);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.unbind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(2);
     });
 
   });

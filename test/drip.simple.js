@@ -300,6 +300,12 @@ describe('Drip simple', function () {
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(2);
     });
 
   });
