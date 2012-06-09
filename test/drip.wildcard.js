@@ -371,4 +371,90 @@ describe('Drip wildcard', function () {
     });
   });
 
+  describe('event proxy', function () {
+    var drop = new drip(wc)
+      , proxy = new drip(wc);
+
+    beforeEach(function ()  {
+      drop.off();
+      proxy.off();
+    });
+
+    it('can proxy an event to another event emitter', function () {
+      var spy = Spy(function (proxied) {
+        expect(proxied).to.be.true;
+      });
+
+      drop.on('proxy:me', spy);
+
+      proxy.proxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can remove a proxy to another event emitter', function () {
+      var spy = Spy(function (proxied) {
+        expect(proxied).to.be.true;
+      });
+
+      drop.on('proxy:me', spy);
+
+      proxy.proxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      proxy.unproxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+  });
+
+  describe('event bind', function () {
+
+    var drop = new drip()
+      , orig = new drip();
+
+    beforeEach(function () {
+      drop.off();
+      orig.off();
+    });
+
+    it('can bind to the events of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('orig', spy);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can unbind from the events of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('orig', spy);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.unbind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+  });
 });
