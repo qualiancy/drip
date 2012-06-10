@@ -22,7 +22,7 @@
     "codex": "0.0.6",
     "mocha": "*",
     "chai": "*",
-    "matcha": "0.0.x",
+    "matcha": "0.1.x",
     "folio": "0.2.x"
   }
 }
