@@ -342,4 +342,161 @@ describe('Drip wildcard', function () {
 
   });
 
+  describe('#has', function () {
+    var drop = new drip(wc);
+
+    beforeEach(function () {
+      drop.off();
+    });
+
+    it('can determine if there are callbacks for an event', function () {
+      drop.on('hello:universe', function () {});
+      drop.on('world:*', function () {});
+
+      expect(drop.has('hello:universe')).to.be.true;
+      expect(drop.has('world:universe')).to.be.true;
+      expect(drop.has('universe:hello')).to.be.false;
+      expect(drop.has('*:hello')).to.be.false;
+      expect(drop.has('universe:*')).to.be.false;
+    });
+
+    xit('can determine if a specific function is a callback for an event', function () {
+      var fn = function () { return 1 === 1 }
+        , fn2 = function () { return 2 === 2 };
+
+      drop.on('hello:universe', fn);
+
+      expect(drop.has('hello:universe', fn)).to.be.true;
+      expect(drop.has('hello:universe', fn2)).to.be.false;
+    });
+  });
+
+  describe('event proxy', function () {
+    var drop = new drip(wc)
+      , proxy = new drip(wc);
+
+    beforeEach(function ()  {
+      drop.off();
+      proxy.off();
+    });
+
+    it('can proxy an event to another event emitter', function () {
+      var spy = Spy(function (proxied) {
+        expect(proxied).to.be.true;
+      });
+
+      drop.on('proxy:me', spy);
+
+      proxy.proxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can remove a proxy to another event emitter', function () {
+      var spy = Spy(function (proxied) {
+        expect(proxied).to.be.true;
+      });
+
+      drop.on('proxy:me', spy);
+
+      proxy.proxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      proxy.unproxy('proxy:me', drop);
+      proxy.emit('proxy:me', true);
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+  });
+
+  describe('event bind', function () {
+
+    var drop = new drip(wc)
+      , orig = new drip();
+
+    beforeEach(function () {
+      drop.off();
+      orig.off();
+    });
+
+    it('can bind to the events of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('orig', spy);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can unbind from the events of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('orig', spy);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.unbind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.bind('orig', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(2);
+    });
+
+    it('can bind with ns to event of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('server:orig', spy);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+    });
+
+    it('can unbind with ns to event of another event emitter', function () {
+      var spy = Spy();
+
+      drop.on('server:orig', spy);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.unbind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(1);
+
+      drop.bind('orig', 'server', orig);
+      orig.emit('orig');
+
+      expect(spy).to.have.property('called', true);
+      expect(spy).to.have.property('calls').with.length(2);
+    });
+
+  });
 });
