@@ -57,9 +57,15 @@ exports.version = '0.2.4';
 
 function Drip (opts) {
   if (opts) {
+    // storage
     this._drip = {};
     this._drip.delimeter = opts.delimeter || ':';
     this._drip.wildcard = opts.wildcard || (opts.delimeter ? true : false);
+
+    // toggle functions
+    this.on = onWildcard;
+    this.off = offWildcard;
+    this.emit = emitWildcard;
   }
 }
 
@@ -88,33 +94,42 @@ function Drip (opts) {
  * @api public
  */
 
-Drip.prototype.on = function (ev, fn) {
-  if (!this._drip || (this._drip && !this._drip.wildcard)) {
-    var map = this._events || (this._events = {});
-    if (!map[ev]) map[ev] = fn;
-    else if ('function' === typeof map[ev]) map[ev] = [ map[ev], fn ];
-    else map[ev].push(fn);
-  } else if (this._drip && this._drip.wildcard) {
-    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
-      , store = this._events || (this._events = {});
+Drip.prototype.on = onSimple;
 
-    function traverse (events, map) {
-      var event = events.shift();
-      map[event] = map[event] || {};
-
-      if (events.length) {
-        traverse(events, map[event]);
-      } else {
-        if (!map[event]._) map[event]._= [ fn ];
-        else map[event]._.push(fn);
-      }
-    };
-
-    traverse(evs, store);
-  }
-
+function onSimple () {
+  var map = this._events || (this._events = {})
+    , ev = arguments[0]
+    , fn = arguments[1];
+  if (!map[ev]) map[ev] = fn;
+  else if ('function' === typeof map[ev]) map[ev] = [ map[ev], fn ];
+  else map[ev].push(fn);
   return this;
-};
+}
+
+function onWildcard () {
+  var map = this._events || (this._events = {})
+    , ev = arguments[0]
+    , fn = arguments[1]
+    , evs = Array.isArray(ev)
+      ? ev.slice(0)
+      : ev.split(this._drip.delimeter)
+    , store = this._events || (this._events = {});
+
+  function traverse (events, map) {
+    var event = events.shift();
+    map[event] = map[event] || {};
+
+    if (events.length) {
+      traverse(events, map[event]);
+    } else {
+      if (!map[event]._) map[event]._= [ fn ];
+      else map[event]._.push(fn);
+    }
+  };
+
+  traverse(evs, store);
+  return this;
+}
 
 /**
  * # .many(event, ttl, callback)
@@ -176,65 +191,76 @@ Drip.prototype.once = function (ev, fn) {
  * @api public
  */
 
-Drip.prototype.off = function (ev, fn) {
+Drip.prototype.off = offSimple;
+
+function offSimple (ev, fn) {
+  if (!this._events || arguments.length == 0) {
+    this._events = {};
+    return this;
+  }
+
+  if (!fn) {
+    this._events[ev] = null;
+    return this;
+  }
+
+  var fns = this._events[ev];
+
+  if (!fns) return this;
+  else if ('function' === typeof fns && fns == fn) this._events[ev] = null;
+  else {
+    for (var i = 0; i < fns.length; i++)
+      if (fns[i] == fn) fns.splice(i, 1);
+    if (fns.length === 0) this._events[ev] = null;
+    else if (fns.length === 1) this._events[ev] = fns[0];
+  }
+
+  return this;
+}
+
+function offWildcard (ev, fn) {
   if (!this._events || arguments.length === 0) {
     this._events = {};
     return this;
   }
 
-  if (!this._drip || (this._drip && !this._drip.wildcard)) {
-    if ('function' !== typeof fn) {
-      this._events[ev] = null;
-      return this;
-    }
+  var evs = Array.isArray(ev)
+      ? ev.slice(0)
+      : ev.split(this._drip.delimeter);
 
-    var fns = this._events[ev];
-
-    if (!fns) return this;
-    else if ('function' === typeof fns && fns == fn) this._events[ev] = null;
-    else if (Array.isArray(fns)) {
-      for (var i = 0; i < fns.length; i++)
-        if (fns[i] == fn) fns.splice(i, 1);
-      if (fns.length === 0) this._events[ev] = null;
-      else if (fns.length === 1) this._events[ev] = fns[0];
-    }
+  if (evs.length === 1 && !fn) {
+    if (this._events[ev]) this._events[ev]._ = null;
+    return this;
   } else {
-    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter);
+    function isEmpty (obj) {
+      for (var name in obj)
+        if (obj[name] && name != '_') return false;
+      return true;
+    };
 
-    if (evs.length === 1) {
-      if (this._events[ev]) this._events[ev]._ = null;
-      return this;
-    } else {
-      function isEmpty (obj) {
-        for (var name in obj)
-          if (obj[name] && name != '_') return false;
-        return true;
-      };
+    function clean (event) {
+      if (fn && 'function' === typeof fn) {
+        for (var i = 0; i < event._.length; i++)
+          if (fn == event._[i]) event._.splice(i, 1);
+        if (event._.length === 0) event._ = null;
+        if (event._ && event._.length == 1) event._ = event._[0];
+      } else {
+        event._ = null;
+      }
 
-      function clean (event) {
-        if (fn && 'function' === typeof fn) {
-          for (var i = 0; i < event._.length; i++)
-            if (fn == event._[i]) event._.splice(i, 1);
-          if (event._.length === 0) event._ = null;
-          if (event._ && event._.length == 1) event._ = event._[0];
-        } else {
-          event._ = null;
-        }
+      if (!event._ && isEmpty(event)) event = null;
+      return event;
+    };
 
-        if (!event._ && isEmpty(event)) event = null;
-        return event;
-      };
+    function traverse (events, map) {
+      var event = events.shift();
+      if (map[event] && map[event]._ && !events.length) map[event] = clean(map[event]);
+      if (map[event] && events.length) map[event] = traverse(events, map[event]);
+      if (!map[event] && isEmpty(map)) map = null;
+      return map;
+    };
 
-      function traverse (events, map) {
-        var event = events.shift();
-        if (map[event] && map[event]._ && !events.length) map[event] = clean(map[event]);
-        if (map[event] && events.length) map[event] = traverse(events, map[event]);
-        if (!map[event] && isEmpty(map)) map = null;
-        return map;
-      };
-
-      this._events = traverse(evs, this._events);
-    }
+    this._events = traverse(evs, this._events);
   }
 
   return this;
@@ -284,67 +310,113 @@ Drip.prototype.removeAllListeners = Drip.prototype.off;
  * @api public
  */
 
-Drip.prototype.emit = function () {
+Drip.prototype.emit = emitSimple;
+
+function emitSimple () {
   if (!this._events) return false;
-
   var ev = arguments[0]
-  //  , fns = getCallbacks.call(this, ev)
-    , fns
-
-  if (!this._drip || (this._drip && !this._drip.wildcard)) {
-    fns = this._events[ev];
-  } else {
-    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter)
-      , la = arguments.length
-      , _a = new Array(la - 1);
-    fns = [];
-
-    function traverse (events, map) {
-      var event = events.shift();
-
-      if (event !== '*' && map[event] && map[event]._ && !events.length) {
-        if ('function' == typeof map[event]._) fns.push(map[event]._);
-        else fns = fns.concat(map[event]._);
-      }
-
-      if (map['*'] && map['*']._ && !events.length) {
-        if ('function' == typeof map['*']._) fns.push(map['*']._);
-        else fns = fns.concat(map['*']._);
-      }
-
-      if (events.length) {
-        if (map[event]) traverse(events.slice(0), map[event]);
-        if (map['*']) traverse(events.slice(0), map['*']);
-      }
-    };
-
-    traverse(evs, this._events);
-  }
-
+    , fns = this._events[ev];
   if (!fns) return false;
-  else if ('function' == typeof fns) {
+
+  if ('function' == typeof fns) {
     if (arguments.length == 1) fns.call(this);
     else if (arguments.length == 2) fns.call(this, arguments[1]);
     else if (arguments.length == 3) fns.call(this, arguments[1], arguments[2]);
     else {
       var l = arguments.length
-        , _a = new Array(l - 1);
-      for (var i = 1; i < l; i++) _a[i - 1] = arguments[i];
-      fns.apply(this, _a);
+        , a = Array(l - 1);
+      for (var i = 1; i < l; i++) a[i - 1] = arguments[i];
+      fns.apply(this, a);
     }
   } else {
-    for (var ia = 1; ia < la; ia++) _a[ia - 1] = arguments[ia];
+    var a;
     for (var i = 0, l = fns.length; i < l; i++) {
-      if (_a.length === 0) fns[i].call(this);
-      else if (_a.length === 1) fns[i].call(this, _a[0]);
-      else if (_a.length === 2) fns[i].call(this, _a[0], _a[1]);
-      else fns[i].apply(this, _a);
+      if (arguments.length === 1) fns[i].call(this);
+      else if (arguments.length === 2) fns[i].call(this, arguments[1]);
+      else if (arguments.length === 3) fns[i].call(this, arguments[1], arguments[2]);
+      else {
+        if (!a) {
+          var l = arguments.length
+          a = Array(l - 1);
+          for (var i2 = 1; i2 < l; i2++) a[i2 - 1] = arguments[i2];
+        }
+        fns[i].apply(this, a);
+      }
+    }
+  }
+
+  return true //emit.call(this, fns, a);
+}
+
+function emitWildcard () {
+  if (!this._events) return false;
+
+  var ev = arguments[0]
+    , fns = []
+    , evs = Array.isArray(ev)
+      ? ev.slice(0)
+      : ev.split(this._drip.delimeter);
+
+  function traverse (events, map) {
+    var event = events.shift();
+
+    if (event !== '*' && map[event] && map[event]._ && !events.length) {
+      if ('function' == typeof map[event]._) fns.push(map[event]._);
+      else {
+        var l1 = fns.length
+          , l2 = map[event]._.length
+          , arr = Array(l1 + l2);
+        for (var i = 0; i < l1; i++) arr[i] = fns[i];
+        for (var i2 = 0; i2 < l2; i2++) arr[i + i2] = map[event]._[i2];
+        fns = arr;
+      }
+    }
+
+    if (map['*'] && map['*']._ && !events.length) {
+      if ('function' == typeof map['*']._) fns.push(map['*']._);
+      else {
+        var l1 = fns.length
+          , l2 = map['*']._.length
+          , arr = Array(l1 + l2);
+        for (var i = 0; i < l1; i++) arr[i] = fns[i];
+        for (var i2 = 0; i2 < l2; i2++) arr[i + i2] = map['*']._[i2];
+        fns = arr;
+      }
+    }
+
+    if (events.length && (map[event] || map['*'])) {
+      var l = events.length
+        , arr1 = Array(l)
+        , arr2 = Array(l);
+      for (var i = 0; i < l; i++) {
+        arr1[i] = events[i];
+        arr2[i] = events[i];
+      }
+      if (map[event]) traverse(arr1, map[event]);
+      if (map['*']) traverse(arr2, map['*']);
+    }
+  };
+
+  traverse(evs, this._events);
+  if (!fns.length) return false;
+
+  var a;
+  for (var i = 0, l = fns.length; i < l; i++) {
+    if (arguments.length === 1) fns[i].call(this);
+    else if (arguments.length === 2) fns[i].call(this, arguments[1]);
+    else if (arguments.length === 3) fns[i].call(this, arguments[1], arguments[2]);
+    else {
+      if (!a) {
+        var la = arguments.length
+        a = Array(la - 1);
+        for (var i2 = 1; i2 < la; i2++) a[i2 - 1] = arguments[i2];
+      }
+      fns[i].apply(this, a);
     }
   }
 
   return true;
-};
-
+}
 
 Drip.prototype.has = function (ev, fn) {
   if (!this._events) return false;
@@ -354,8 +426,9 @@ Drip.prototype.has = function (ev, fn) {
   if (!this._drip || (this._drip && !this._drip.wildcard)) {
     fns = this._events[ev];
   } else {
-    var evs = Array.isArray(ev) ? ev : ev.split(this._drip.delimeter);
-    fns = [];
+    var evs = Array.isArray(ev)
+      ? ev.slice(0)
+      : ev.split(this._drip.delimeter);
 
     function traverse (events, map) {
       var event = events.shift();
@@ -376,6 +449,7 @@ Drip.prototype.has = function (ev, fn) {
       }
     };
 
+    fns = [];
     traverse(evs, this._events);
   }
 
