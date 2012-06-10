@@ -3,41 +3,31 @@ var EE = require('events').EventEmitter
   , ee = new EE();
 
 var drip = require('../lib/drip')
-  , drop = new drip({ wildcard: true });
 
-// warm up
-bench('nodejs native events', function (next) {
-  ee.on('test1', function () { 1==1; });
-  ee.emit('test1');
-  ee.removeAllListeners('test1');
-  next();
-});
+suite('wildcard emit', function () {
 
-bench('drip emit: single events', function (next) {
+  var drop = new drip({ wildcard: true });
   drop.on('foo', function () { 1==1; });
-  drop.emit('foo');
-  drop.removeAllListeners('foo');
-  next();
-});
+  bench('drip emit: single events', function () {
+    drop.emit('foo');
+  });
 
-bench('drip emit: namespace events', function (next) {
-  drop.on('foo:bar', function () { 1==1; });
-  drop.emit('foo:bar');
-  drop.off('foo:bar');
-  next();
-});
+  var drop2 = new drip({ wildcard: true });
+  drop2.on('foo:bar', function () { 1==1; });
+  bench('drip emit: namespace events', function () {
+    drop.emit('foo:bar');
+  });
 
-bench('drip emit: wildcarded events', function (next) {
-  drop.on('foo:*', function () { 1==1; });
-  drop.emit('foo:bar');
-  drop.off('foo:*');
-  next();
-});
+  var drop3 = new drip({ wildcard: true });
+  drop3.on('foo:*', function () { 1==1; });
+  bench('drip emit: wildcarded events', function () {
+    drop3.emit('foo:bar');
+  });
 
-bench('drip emit: nested wildcarded events', function (next) {
-  drop.on('foo:*:bar', function () { 1==1; });
-  drop.emit('foo:drip:bar');
-  drop.off('foo:*:bar');
-  next();
-});
+  var drop4 = new drip({ wildcard: true });
+  drop4.on('foo:*:bar', function () { 1==1; });
+  bench('drip emit: nested wildcarded events', function () {
+    drop4.emit('foo:drip:bar');
+  });
 
+});

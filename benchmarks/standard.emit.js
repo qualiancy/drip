@@ -5,14 +5,16 @@ var EE = require('events').EventEmitter
 var drip = require('../lib/drip')
   , drop = new drip();
 
-var test = 2;
+suite('simple emit', function () {
 
-ee.on('test', function () { 1==1; });
-bench('nodejs native events', function () {
-  ee.emit('test');
-});
+  ee.on('test', function () { 1==1; });
+  bench('nodejs native events', function () {
+    ee.emit('test');
+  });
 
-drop.on('test', function () { 1==1; });
-bench('drip standard events', function () {
-  drop.emit('test');
+  drop.on('test', function () { 1==1; });
+  bench('drip standard events', function () {
+    drop.emit('test');
+  });
+
 });
