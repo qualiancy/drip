@@ -350,9 +350,11 @@ describe('Drip wildcard', function () {
     });
 
     it('can determine if there are callbacks for an event', function () {
+      drop.on('universe', function () {});
       drop.on('hello:universe', function () {});
       drop.on('world:*', function () {});
 
+      expect(drop.has('universe')).to.be.true;
       expect(drop.has('hello:universe')).to.be.true;
       expect(drop.has('world:universe')).to.be.true;
       expect(drop.has('universe:hello')).to.be.false;
