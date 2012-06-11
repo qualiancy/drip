@@ -190,7 +190,7 @@ describe('Drip simple', function () {
     });
   });
 
-  describe('#has', function () {
+  describe('#hasListenerListener', function () {
     var drop = new drip();
 
     beforeEach(function () {
@@ -200,8 +200,8 @@ describe('Drip simple', function () {
     it('can determine if there are callbacks for an event', function () {
       drop.on('hello', function () {});
 
-      expect(drop.has('hello')).to.be.true;
-      expect(drop.has('universe')).to.be.false;
+      expect(drop.hasListener('hello')).to.be.true;
+      expect(drop.hasListener('universe')).to.be.false;
     });
 
     it('can determine if a specific function is a callback for an event', function () {
@@ -210,14 +210,14 @@ describe('Drip simple', function () {
 
       drop.on('hello', fn);
 
-      expect(drop.has('hello', fn)).to.be.true;
-      expect(drop.has('universe', fn)).to.be.false;
-      expect(drop.has('hello', fn2)).to.be.false;
+      expect(drop.hasListener('hello', fn)).to.be.true;
+      expect(drop.hasListener('universe', fn)).to.be.false;
+      expect(drop.hasListener('hello', fn2)).to.be.false;
     });
 
   });
 
-  describe('event proxy', function () {
+  describe('event bind', function () {
     var drop = new drip()
       , proxy = new drip();
 
@@ -226,34 +226,34 @@ describe('Drip simple', function () {
       proxy.off();
     });
 
-    it('can proxy an event to another event emitter', function () {
+    it('can bind to an event to another event emitter', function () {
       var spy = Spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
       drop.on('proxyme', spy);
 
-      proxy.proxy('proxyme', drop);
+      proxy.bindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
     });
 
-    it('can remove a proxy to another event emitter', function () {
+    it('can remove a bind to another event emitter', function () {
       var spy = Spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
       drop.on('proxyme', spy);
 
-      proxy.proxy('proxyme', drop);
+      proxy.bindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
 
-      proxy.unproxy('proxyme', drop);
+      proxy.unbindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
       expect(spy).to.have.property('called', true);
@@ -262,7 +262,7 @@ describe('Drip simple', function () {
 
   });
 
-  describe('event bind', function () {
+  describe('event proxy', function () {
 
     var drop = new drip()
       , orig = new drip();
@@ -272,36 +272,36 @@ describe('Drip simple', function () {
       orig.off();
     });
 
-    it('can bind to the events of another event emitter', function () {
+    it('can proxy to the events of another event emitter', function () {
       var spy = Spy();
 
       drop.on('orig', spy);
 
-      drop.bind('orig', orig);
+      drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
     });
 
-    it('can unbind from the events of another event emitter', function () {
+    it('can unprox from the events of another event emitter', function () {
       var spy = Spy();
 
       drop.on('orig', spy);
 
-      drop.bind('orig', orig);
+      drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
 
-      drop.unbind('orig', orig);
+      drop.unproxyEvent('orig', orig);
       orig.emit('orig');
 
       expect(spy).to.have.property('called', true);
       expect(spy).to.have.property('calls').with.length(1);
 
-      drop.bind('orig', orig);
+      drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
       expect(spy).to.have.property('called', true);
