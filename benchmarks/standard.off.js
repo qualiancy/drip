@@ -7,30 +7,34 @@ var drip = require('../lib/drip')
 var noop = function () { 1 == 1 }
   , noop2 = function () { 2 == 2 };
 
-bench('single listener off: nodejs native events', function (next) {
-  ee.on('test1', noop);
-  ee.removeListener('test1', noop);
-  next();
+suite('single listener off', function () {
+
+  bench('node event emitter', function () {
+    ee.on('test1', noop);
+    ee.removeListener('test1', noop);
+  });
+
+  bench('drip simple', function () {
+    drop.on('test1', noop);
+    drop.off('test1', noop);
+  });
+
 });
 
-bench('single listener off: drip', function (next) {
-  drop.on('test1', noop);
-  drop.off('test1', noop);
-  next();
-});
+suite('multiple listeners off', function () {
 
-bench('multiple listener off: nodejs native events', function (next) {
-  ee.on('test1', noop);
-  ee.on('test1', noop2);
-  ee.removeListener('test1', noop);
-  ee.removeListener('test1', noop2);
-  next();
-});
+  bench('node event emitter', function () {
+    ee.on('test1', noop);
+    ee.on('test1', noop2);
+    ee.removeListener('test1', noop);
+    ee.removeListener('test1', noop2);
+  });
 
-bench('multiple listener off: drip', function (next) {
-  drop.on('test1', noop);
-  drop.on('test1', noop2);
-  drop.off('test1', noop);
-  drop.off('test1', noop2);
-  next();
+  bench('drip simple', function () {
+    drop.on('test1', noop);
+    drop.on('test1', noop2);
+    drop.off('test1', noop);
+    drop.off('test1', noop2);
+  });
+
 });
