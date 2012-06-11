@@ -18,6 +18,28 @@
  */
 
 /*!
+ * concat (arr1, arr2(
+ *
+ * A much faster concat for two arrays.
+ * Returns a new array.
+ *
+ * @param {Array} first array
+ * @param {Array} second array
+ * @returns {Array} combined
+ * @api private
+ */
+
+function concat (arr1, arr2) {
+  var l1 = arr1.length
+    , l2 = arr2.length
+    , res = Array(l1 + l2);
+  for (var i = 0; i < l1; i++) res[i] = arr1[i];
+  for (var i2 = 0; i2 < l2; i2++) res[i + i2] = arr2[i2];
+  return res;
+}
+
+
+/*!
  * primary module export
  */
 
@@ -30,7 +52,7 @@ var exports = module.exports = Drip;
 exports.version = '0.2.4';
 
 /**
- * # Drip#constructor
+ * ##
  *
  * Create new instance of drip. Can also be easily
  * be used as the basis for other objects.
@@ -63,9 +85,12 @@ function Drip (opts) {
     this._drip.wildcard = opts.wildcard || (opts.delimeter ? true : false);
 
     // toggle functions
-    this.on = onWildcard;
-    this.off = offWildcard;
-    this.emit = emitWildcard;
+    if (this._drip.wildcard) {
+      this.on = onWildcard;
+      this.off = offWildcard;
+      this.emit = emitWildcard;
+      this.hasListener  = hasWildcard;
+    }
   }
 }
 
@@ -96,6 +121,10 @@ function Drip (opts) {
 
 Drip.prototype.on = onSimple;
 
+/*!
+ * `on` for non-wildcard drip instances
+ */
+
 function onSimple () {
   var map = this._events || (this._events = {})
     , ev = arguments[0]
@@ -105,6 +134,10 @@ function onSimple () {
   else map[ev].push(fn);
   return this;
 }
+
+/*!
+ * `on` for wildcard drip instances
+ */
 
 function onWildcard () {
   var map = this._events || (this._events = {})
@@ -193,6 +226,10 @@ Drip.prototype.once = function (ev, fn) {
 
 Drip.prototype.off = offSimple;
 
+/*!
+ * off for simple drip instances
+ */
+
 function offSimple (ev, fn) {
   if (!this._events || arguments.length == 0) {
     this._events = {};
@@ -217,6 +254,10 @@ function offSimple (ev, fn) {
 
   return this;
 }
+
+/*!
+ * off for wildcard drip instances
+ */
 
 function offWildcard (ev, fn) {
   if (!this._events || arguments.length === 0) {
@@ -276,7 +317,9 @@ function offWildcard (ev, fn) {
  * @api public
  */
 
-Drip.prototype.removeListener = Drip.prototype.off;
+Drip.prototype.removeListener = function () {
+  this.off.apply(this, arguments);
+};
 
 /**
  * # .removeAllListeners([event], [callback])
@@ -288,7 +331,9 @@ Drip.prototype.removeListener = Drip.prototype.off;
  * @api public
  */
 
-Drip.prototype.removeAllListeners = Drip.prototype.off;
+Drip.prototype.removeAllListeners = function () {
+  this.off.call(this);
+};
 
 /**
  * # .emit(event, [args], [...])
@@ -312,10 +357,16 @@ Drip.prototype.removeAllListeners = Drip.prototype.off;
 
 Drip.prototype.emit = emitSimple;
 
+/*!
+ * emit for simple drip instances
+ */
+
 function emitSimple () {
   if (!this._events) return false;
+
   var ev = arguments[0]
     , fns = this._events[ev];
+
   if (!fns) return false;
 
   if ('function' == typeof fns) {
@@ -345,59 +396,22 @@ function emitSimple () {
     }
   }
 
-  return true //emit.call(this, fns, a);
+  return true;
 }
+
+/*!
+ * emit for wildcard drip instances
+ */
 
 function emitWildcard () {
   if (!this._events) return false;
 
   var ev = arguments[0]
-    , fns = []
     , evs = Array.isArray(ev)
       ? ev.slice(0)
-      : ev.split(this._drip.delimeter);
+      : ev.split(this._drip.delimeter)
+    , fns = traverse(evs, this._events);
 
-  function traverse (events, map) {
-    var event = events.shift();
-
-    if (event !== '*' && map[event] && map[event]._ && !events.length) {
-      if ('function' == typeof map[event]._) fns.push(map[event]._);
-      else {
-        var l1 = fns.length
-          , l2 = map[event]._.length
-          , arr = Array(l1 + l2);
-        for (var i = 0; i < l1; i++) arr[i] = fns[i];
-        for (var i2 = 0; i2 < l2; i2++) arr[i + i2] = map[event]._[i2];
-        fns = arr;
-      }
-    }
-
-    if (map['*'] && map['*']._ && !events.length) {
-      if ('function' == typeof map['*']._) fns.push(map['*']._);
-      else {
-        var l1 = fns.length
-          , l2 = map['*']._.length
-          , arr = Array(l1 + l2);
-        for (var i = 0; i < l1; i++) arr[i] = fns[i];
-        for (var i2 = 0; i2 < l2; i2++) arr[i + i2] = map['*']._[i2];
-        fns = arr;
-      }
-    }
-
-    if (events.length && (map[event] || map['*'])) {
-      var l = events.length
-        , arr1 = Array(l)
-        , arr2 = Array(l);
-      for (var i = 0; i < l; i++) {
-        arr1[i] = events[i];
-        arr2[i] = events[i];
-      }
-      if (map[event]) traverse(arr1, map[event]);
-      if (map['*']) traverse(arr2, map['*']);
-    }
-  };
-
-  traverse(evs, this._events);
   if (!fns.length) return false;
 
   var a;
@@ -418,43 +432,102 @@ function emitWildcard () {
   return true;
 }
 
-Drip.prototype.has = function (ev, fn) {
-  if (!this._events) return false;
-  var ev = arguments[0]
-    , fns;
+/*!
+ * traverse (lookup, events)
+ *
+ * Traverse through a wildcard event tree
+ * and determin which callbacks match the
+ * given lookup. Recursive. Returns array
+ * of events at that level and all subsequent
+ * levels.
+ *
+ * @param {Array} event lookup
+ * @param {Object} events tree to serch
+ * @api private
+ */
 
-  if (!this._drip || (this._drip && !this._drip.wildcard)) {
-    fns = this._events[ev];
-  } else {
-    var evs = Array.isArray(ev)
-      ? ev.slice(0)
-      : ev.split(this._drip.delimeter);
+function traverse (events, map) {
+  var event = events.shift()
+    , fns = [];
 
-    function traverse (events, map) {
-      var event = events.shift();
-
-      if (event !== '*' && map[event] && map[event]._ && !events.length) {
-        if ('function' == typeof map[event]._) fns.push(map[event]._);
-        else fns = fns.concat(map[event]._);
-      }
-
-      if (map['*'] && map['*']._ && !events.length) {
-        if ('function' == typeof map['*']._) fns.push(map['*']._);
-        else fns = fns.concat(map['*']._);
-      }
-
-      if (events.length) {
-        if (map[event]) traverse(events.slice(0), map[event]);
-        if (map['*']) traverse(events.slice(0), map['*']);
-      }
-    };
-
-    fns = [];
-    traverse(evs, this._events);
+  if (event !== '*' && map[event] && map[event]._ && !events.length) {
+    if ('function' == typeof map[event]._) fns.push(map[event]._);
+    else fns = concat(fns, map[event]._);
   }
 
+  if (map['*'] && map['*']._ && !events.length) {
+    if ('function' == typeof map['*']._) fns.push(map['*']._);
+    else fns = concat(fns, map['*']._);
+  }
+
+  if (events.length && (map[event] || map['*'])) {
+    var l = events.length
+      , arr1 = Array(l)
+      , arr2 = Array(l);
+    for (var i = 0; i < l; i++) {
+      arr1[i] = events[i];
+      arr2[i] = events[i];
+    }
+    if (map[event]) {
+      var trav = traverse(arr1, map[event]);
+      fns = concat(fns, trav);
+    }
+    if (map['*']) {
+      var trav = traverse(arr2, map['*']);
+      fns = concat(fns, trav);
+    }
+  }
+
+  return fns;
+};
+
+/**
+ * # .hasListener (ev, [function])
+ *
+ * Determine if an event has listeners. If a function
+ * is proved will determine if that function is a
+ * part of the listeners.
+ *
+ * @param {String|Array} event key to seach for
+ * @param {Function} optional function to check
+ * @returns {Boolean} found
+ * @name has
+ * @api public
+ */
+
+Drip.prototype.hasListener = hasSimple;
+
+/*!
+ * has for simple drip instances
+ */
+
+function hasSimple (ev, fn) {
+  if (!this._events) return false;
+  var fns = this._events[ev];
   if (!fns) return false;
-  else if (!fn && 'function' === typeof fns) return true;
+  return hasListener(fns, fn);
+}
+
+/*!
+ * has for wildcard drip instances
+ */
+
+function hasWildcard (ev, fn) {
+  if (!this._events) return false;
+  var evs = Array.isArray(ev)
+      ? ev.slice(0)
+      : ev.split(this._drip.delimeter)
+    , fns = traverse(evs, this._events);
+  if (fns.length === 0) return false;
+  return hasListener(fns, fn);
+}
+
+/*!
+ * has common
+ */
+
+function hasListener (fns, fn) {
+  if (!fn && 'function' === typeof fns) return true;
   else if (fn && 'function' === typeof fns && fn == fns) return true;
   else if (fns.length === 0) return false;
   else if (fn && fns.indexOf(fn) > -1) return true;
@@ -463,20 +536,78 @@ Drip.prototype.has = function (ev, fn) {
 };
 
 /**
- * .proxyEvent(event, target);
+ * ### .bindEvent (event, target)
+ *
+ * An event proxy will listen for events on the current drip
+ * instance and emit them on the target when they occur. This
+ * functionality is compable with node event emitter. Wildcarded
+ * events on this instance will be emitted using the delimeter
+ * on the target.
+ *
+ * Note that proxies will also be removed if a generic `off` call
+ * is used.
+ *
+ * @param {String|Array} event key to bind
+ * @param {Object} target drip or node compatible event emitter
+ * @name bindEvent
+ * @api public
  */
 
-Drip.prototype.proxy = function (ev, target) {
+Drip.prototype.bindEvent = function (ev, target) {
   this.on(ev, eventProxy.call(this, ev, target));
   return this;
 };
 
-Drip.prototype.unproxy = function (ev, target) {
+/**
+ * ### .unbindEvent (event, target)
+ *
+ * Remove a boudn event listener. Event and target
+ * must be provied the same as in `proxy`.
+ *
+ * @param {String|Array} event key to bind
+ * @param {Object} target drip or node compatible event emitter
+ * @name unbindEvent
+ * @api public
+ */
+
+Drip.prototype.unbindEvent = function (ev, target) {
   this.off(ev, eventProxy.call(this, ev, target));
   return this;
 };
 
-Drip.prototype.bind = function (ev, ns, target) {
+/**
+ * ### .proxyEvent (event, [namespace], target)
+ *
+ * > proxy - noun - the authority to act on behalf of another
+ *
+ * An event proxy will listen for events on a different
+ * event emitter and emit them onf the current drip instance
+ * when they occur. An optional namespace will be pre-pended
+ * to the event when they are emitted on the current drip
+ * instance.
+ *
+ * For example, the following will demonstrate a
+ * namspacing pattering for node.
+ *
+ *     function ProxyServer () {
+ *       Drip.call(this, { delimeter: ':' });
+ *       this.server = http.createServer();
+ *       this.bindEvent('request', 'server', this.server);
+ *     }
+ *
+ * Anytime `this.server` emits a `request` event, it will be
+ * emitted on the constructed ProxyServer as `server:request`.
+ * All arguments included in the original emit will also be
+ * available
+ *
+ * @param {String|Array} event key to proxy
+ * @param {String} namespace to prepend to this emit
+ * @param {Object} target event emitter
+ * @name proxyEvent
+ * @api public
+ */
+
+Drip.prototype.proxyEvent = function (ev, ns, target) {
   if ('string' !== typeof ns) target = ns, ns = null;
   var listen = (!ns || !this._drip.delimeter)
     ? ev
@@ -485,9 +616,24 @@ Drip.prototype.bind = function (ev, ns, target) {
       : ns.split(this._drip.delimeter).concat(ev));
 
   target.on(ev, eventProxy.call(this, listen, this));
+  return this;
 };
 
-Drip.prototype.unbind = function (ev, ns, target) {
+/**
+ * ### .unproxyEvent (event, [namespace], target)
+ *
+ * Remove an event proxy by removing the listening event
+ * from the target. The same namespace must be provided
+ * in order to ensure a clean removal.
+ *
+ * @param {String|Array} event key to proxy
+ * @param {String} namespace to prepend to this emit
+ * @param {Object} target event emitter
+ * @name unproxyEvent
+ * @api public
+ */
+
+Drip.prototype.unproxyEvent = function (ev, ns, target) {
   if ('string' !== typeof ns) target = ns, ns = null;
   var listen = (!ns || !this._drip.delimeter)
     ? ev
@@ -496,7 +642,23 @@ Drip.prototype.unbind = function (ev, ns, target) {
       : ns.split(this._drip.delimeter).concat(ev));
 
   target.removeListener(ev, eventProxy.call(this, listen, this));
+  return this;
 };
+
+/*!
+ * eventProxy (event, target)
+ *
+ * Create a function to use as a listener for bind/unbind or
+ * proxy/unproxy calls. It will memoize the result to always
+ * ensure the name function is provided for subequent calls.
+ * This ensure that the the listener is correctly removed during
+ * the un(bind|proxy) variants
+ *
+ * @param {String} event
+ * @param {Object} target
+ * @returns {Function} new or found callback
+ * @api private
+ */
 
 function eventProxy (ev, target) {
   var _drip = this._drip || (this._drip = {})
@@ -519,6 +681,18 @@ function eventProxy (ev, target) {
 
   return proxy;
 }
+
+/*!
+ * makeProxy (event, target)
+ *
+ * Provide a context independant proxy function
+ * for using with `eventProxy` construction.
+ *
+ * @param {String} event
+ * @param {Object} target
+ * @returns {Function} to be used callback
+ * @api private
+ */
 
 function makeProxy(ev, target) {
   return function proxy () {
