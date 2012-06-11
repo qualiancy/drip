@@ -1,4 +1,37 @@
 
+0.3.0 / 2012-06-10 
+==================
+
+  * Merge branch 'refactor/toggle'
+  * browser build
+  * update tests to conform to switched bind/proxy
+  * reverse functionality for bind / proxy to make more sense. comments to lib/proxy like a boss
+  * refactor traverse for #emit/#has as high level private function
+  * refactor all benchmarks for matcha 1.0
+  * browser build for testing
+  * off toggle support on wildcard
+  * pivot attached functions based on type for #emit and #on
+  * update matcha
+  * fix bug where array based event lookup was modifying original array.
+  * Merge branch 'feature/proxyevents'
+  * test tweak for has to support detection of wildcard `on` calls with specific `has` calls
+  * browser build
+  * all tests for proxy/bind
+  * eventProxy memorizes proxy function for proper unbinding
+  * tests for proxy and bind
+  * refactoring eventProxy and bind
+  * benchmark cleanup
+  * tests for #has
+  * feature #has complete
+  * refactor emit as all callbacks are stored in array
+  * clean up benchmarks
+  * refactor build steps
+  * clean deps
+  * test coverage support
+  * move prefix/suffix to support where it belongs
+  * test cleanup
+  * code cleanup
+
 0.2.4 / 2012-03-07 
 ==================
 

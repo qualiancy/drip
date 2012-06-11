@@ -49,7 +49,7 @@ var exports = module.exports = Drip;
  * version export
  */
 
-exports.version = '0.2.4';
+exports.version = '0.3.0';
 
 /**
  * ##
