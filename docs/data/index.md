@@ -18,8 +18,6 @@ that you add it to your project's `package.json`.
 npm install drip
 ```
 
-[![Build Status](https://secure.travis-ci.org/logicalparadox/drip.png)](http://travis-ci.org/logicalparadox/drip)
-
 #### Projects Using Drip
 
 * [Seed](https://github.com/qualiancy/seed) - Storage-agnostic, event emitting 

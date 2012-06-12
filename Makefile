@@ -7,13 +7,13 @@ all:
 	@node support/compile
 
 clean:
-	@rm -f dist/drip.js dist/drip.min.js
+	@rm -f drip.js drip.min.js
 
 docs: clean-docs
-	@./node_modules/.bin/codex build docs \
-		--out docs/out
+	@./node_modules/.bin/codex build \
+		--in docs
 	@./node_modules/.bin/codex serve \
-		--out docs/out --static /drip
+		--dir docs/out --mount /drip
 
 clean-docs:
 	@rm -rf docs/out

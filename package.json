@@ -19,7 +19,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "codex": "0.0.6",
+    "codex": "0.2.x",
     "mocha": "*",
     "chai": "*",
     "matcha": "0.1.x",
