@@ -1,5 +1,8 @@
-if (!chai)
-  var chai = require('chai');
+if (!chai) {
+  var chai = require('chai')
+    , chaiSpies = require('chai-spies');
+  chai.use(chaiSpies);
+}
 
 var expect = chai.expect;
 
@@ -8,23 +11,6 @@ if (!drip) {
 }
 
 var wc = { wildcard: true };
-
-function Spy (fn) {
-  if (!fn) fn = function() {};
-
-  function proxy() {
-    var args = Array.prototype.slice.call(arguments);
-    proxy.calls.push(args);
-    proxy.called = true;
-    fn.apply(this, args);
-  }
-
-  proxy.prototype = fn.prototype;
-  proxy.calls = [];
-  proxy.called = false;
-
-  return proxy;
-}
 
 describe('Drip wildcard', function () {
 
@@ -204,72 +190,65 @@ describe('Drip wildcard', function () {
       });
 
       it('should emit a single event without arguments', function () {
-        var spy = Spy();
+        var spy = chai.spy();
 
         drop.on('test', spy);
         drop.emit('test');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(1);
+        expect(spy).to.have.been.called.once;
       });
 
       it('should emit events and pass single argument to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(1);
         });
 
         drop.on('test', spy);
         drop.emit('test', 'one');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(1);
+        expect(spy).to.have.been.called.once;
       });
 
       it('should emit events and pass 2 arguments to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(2);
         });
 
         drop.on('test', spy);
         drop.emit('test', 'one', 'two');
 
-        expect(spy.called).be.ok;
-        expect(spy.calls).to.have.length(1);
+        expect(spy).to.have.been.called.once;
       });
 
       it('should emit events and pass 3+ arguments to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(5);
         });
 
         drop.on('test', spy);
         drop.emit('test', 'one', 'two', 'three', 'four', 'five');
-
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(1);
+        expect(spy).to.have.been.called.once;
       });
 
       it('should allow for `only` to function correctly', function () {
-        var spy = Spy();
+        var spy = chai.spy();
 
         drop.once('test', spy);
         drop.emit('test');
         drop.emit('test');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(1);
+        expect(spy).to.have.been.called.once;
       });
 
       it('should allow for `many` to function correctly', function () {
-        var spy = Spy();
+        var spy = chai.spy();
 
         drop.many('test', 2, spy);
         drop.emit('test');
         drop.emit('test');
         drop.emit('test');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(2);
+        expect(spy).to.have.been.called.twice;
       });
 
     });
@@ -282,7 +261,7 @@ describe('Drip wildcard', function () {
       });
 
       it('should emit a single event without arguments', function () {
-        var spy = Spy();
+        var spy = chai.spy();
 
         drop.on('foo:bar', spy);
         drop.on('*:bar', spy);
@@ -290,12 +269,11 @@ describe('Drip wildcard', function () {
 
         drop.emit('foo:bar');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(3);
+        expect(spy).to.have.been.called.exactly(3);
       });
 
       it('should emit events and pass single argument to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(1);
         });
 
@@ -305,12 +283,11 @@ describe('Drip wildcard', function () {
 
         drop.emit('foo:bar', 'one');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(3);
+        expect(spy).to.have.been.called.exactly(3);
       });
 
       it('should emit events and pass 2 arguments to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(2);
         });
 
@@ -320,12 +297,11 @@ describe('Drip wildcard', function () {
 
         drop.emit('foo:bar', 'one', 'two');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(3);
+        expect(spy).to.have.been.called.exactly(3);
       });
 
       it('should emit events and pass 3+ arguments to callbacks', function () {
-        var spy = Spy(function () {
+        var spy = chai.spy(function () {
           expect(arguments).to.have.length(5);
         });
 
@@ -335,8 +311,7 @@ describe('Drip wildcard', function () {
 
         drop.emit('foo:bar', 'one', 'two', 'three', 'four', 'five');
 
-        expect(spy.called).to.be.ok;
-        expect(spy.calls).to.have.length(3);
+        expect(spy).to.have.been.called.exactly(3);
       });
     });
 
@@ -383,7 +358,7 @@ describe('Drip wildcard', function () {
     });
 
     it('can bind an event to another event emitter', function () {
-      var spy = Spy(function (proxied) {
+      var spy = chai.spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
@@ -392,12 +367,11 @@ describe('Drip wildcard', function () {
       proxy.bindEvent('proxy:me', drop);
       proxy.emit('proxy:me', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can remove a bind to another event emitter', function () {
-      var spy = Spy(function (proxied) {
+      var spy = chai.spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
@@ -406,14 +380,12 @@ describe('Drip wildcard', function () {
       proxy.bindEvent('proxy:me', drop);
       proxy.emit('proxy:me', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       proxy.unbindEvent('proxy:me', drop);
       proxy.emit('proxy:me', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
   });
@@ -429,75 +401,67 @@ describe('Drip wildcard', function () {
     });
 
     it('can proxy the events of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('orig', spy);
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can unproxy from the events of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('orig', spy);
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.unproxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(2);
+      expect(spy).to.have.been.called.twice;
     });
 
     it('can proxy with ns to event of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('server:orig', spy);
 
       drop.proxyEvent('orig', 'server', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can unproxy with ns to event of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('server:orig', spy);
 
       drop.proxyEvent('orig', 'server', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.unproxyEvent('orig', 'server', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.proxyEvent('orig', 'server', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(2);
+      expect(spy).to.have.been.called.twice;
     });
 
   });

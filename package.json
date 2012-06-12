@@ -25,10 +25,11 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "codex": "0.2.x",
     "mocha": "*",
     "chai": "*",
+    "chai-spies": "*",
     "matcha": "0.1.x",
+    "codex": "0.2.x",
     "folio": "0.2.x"
   }
 }

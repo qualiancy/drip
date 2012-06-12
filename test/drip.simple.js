@@ -1,27 +1,13 @@
-if (!chai)
-  var chai = require('chai');
+if (!chai) {
+  var chai = require('chai')
+    , chaiSpies = require('chai-spies');
+  chai.use(chaiSpies);
+}
 
 var expect = chai.expect;
 
 if (!drip) {
   var drip = require('..');
-}
-
-function Spy (fn) {
-  if (!fn) fn = function() {};
-
-  function proxy() {
-    var args = Array.prototype.slice.call(arguments);
-    proxy.calls.push(args);
-    proxy.called = true;
-    fn.apply(this, args);
-  }
-
-  proxy.prototype = fn.prototype;
-  proxy.calls = [];
-  proxy.called = false;
-
-  return proxy;
 }
 
 describe('Drip simple', function () {
@@ -137,49 +123,45 @@ describe('Drip simple', function () {
     });
 
     it('should emit a single event without arguments', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('test', spy);
       drop.emit('test');
 
-      expect(spy.called).to.be.ok;
-      expect(spy.calls).to.have.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('should emit events and pass single argument to callbacks', function () {
-      var spy = Spy(function () {
+      var spy = chai.spy(function () {
         expect(arguments).to.have.length(1);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one');
 
-      expect(spy.called).to.be.ok;
-      expect(spy.calls).to.have.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('should emit events and pass 2 arguments to callbacks', function () {
-      var spy = Spy(function () {
+      var spy = chai.spy(function () {
         expect(arguments).to.have.length(2);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one', 'two');
 
-      expect(spy.called).to.be.ok;
-      expect(spy.calls).to.have.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('should emit events and pass 3+ arguments to callbacks', function () {
-      var spy = Spy(function () {
+      var spy = chai.spy(function () {
         expect(arguments).to.have.length(5);
       });
 
       drop.on('test', spy);
       drop.emit('test', 'one', 'two', 'three', 'four', 'five');
 
-      expect(spy.called).to.be.ok;
-      expect(spy.calls).to.have.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can emit events that do not have listeners', function () {
@@ -227,7 +209,7 @@ describe('Drip simple', function () {
     });
 
     it('can bind to an event to another event emitter', function () {
-      var spy = Spy(function (proxied) {
+      var spy = chai.spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
@@ -236,12 +218,11 @@ describe('Drip simple', function () {
       proxy.bindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can remove a bind to another event emitter', function () {
-      var spy = Spy(function (proxied) {
+      var spy = chai.spy(function (proxied) {
         expect(proxied).to.be.true;
       });
 
@@ -250,14 +231,12 @@ describe('Drip simple', function () {
       proxy.bindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       proxy.unbindEvent('proxyme', drop);
       proxy.emit('proxyme', true);
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
   });
@@ -273,39 +252,35 @@ describe('Drip simple', function () {
     });
 
     it('can proxy to the events of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('orig', spy);
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
     });
 
     it('can unprox from the events of another event emitter', function () {
-      var spy = Spy();
+      var spy = chai.spy();
 
       drop.on('orig', spy);
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.unproxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(1);
+      expect(spy).to.have.been.called.once;
 
       drop.proxyEvent('orig', orig);
       orig.emit('orig');
 
-      expect(spy).to.have.property('called', true);
-      expect(spy).to.have.property('calls').with.length(2);
+      expect(spy).to.have.been.called.twice;
     });
 
   });
