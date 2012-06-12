@@ -1,139 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Home - Drip
-    </title>
-    <script type="text/javascript">var ghuser = 'logicalparadox'
-  , ghproject = 'drip';
-
-</script>
+    <title>Drip</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script src="/drip/public/js/prettify.js"></script>
     <script src="/drip/public/js/main.js"></script>
     <link rel="stylesheet" href="/drip/public/css/main.css" type="text/css" media="all">
-    <link href="http://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet" type="text/css">
-    <script type="text/javascript">var mpq = [];
-mpq.push(["init", "7f05bac62320002e876c5d202d6058ad"]);
-(function(){var b,a,e,d,c;b=document.createElement("script");b.type="text/javascript";
-b.async=true;b.src=(document.location.protocol==="https:"?"https:":"http:")+
-"//api.mixpanel.com/site_media/js/api/mixpanel.js";a=document.getElementsByTagName("script")[0];
-a.parentNode.insertBefore(b,a);e=function(f){return function(){mpq.push(
-[f].concat(Array.prototype.slice.call(arguments,0)))}};d=["init","track","track_links",
-"track_forms","register","register_once","identify","name_tag","set_config"];for(c=0;c<
-d.length;c++){mpq[d[c]]=e(d[c])}})();
-</script>
-    <script type="text/javascript">var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-26183904-2']);
-_gaq.push(['_trackPageview']);
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-26183904-7']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
   </head>
   <body>
-    <nav>
-      <ul class="sections">
-        <li><a href="#installation" class="scroll">Installation</a>
-        </li>
-        <li><a href="#usage" class="scroll">Usage Scenarios</a>
-        </li>
-        <li><a href="#contributor" class="scroll">For Contributors</a>
-        </li>
-      </ul>
-      <ul class="code">
-        <li><a href="/drip/code/index.html">lib/drip.js</a>
-        </li>
-      </ul>
-    </nav>
-    <header>
-      <h1><a href="/drip">Drip</a>
-      </h1>
-      <div class="description"><p>Drip is a event-emitter framework for <a href="http://nodejs.org">node</a> and the browser that supports namespaces and wildcards with a focus on perfomance.</p>
-      </div>
-      <div class="gh">
-        <h4>Latest Update to Github
-        </h4>
-        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+    <div class="wrapper">
+      <header>
+        <h1><a href="#top" class="scroll">Drip</a></h1>
+        <div class="tagline"><p>An EventEmitter alternative for <a href="http://nodejs.org">node.js</a> and the browser that supports namespaces and wildcards.</p>
+</div><a href="https://github.com/logicalparadox/electron" class="fork">
+          <h2>View the Project on GitHub</h2>
+          <div class="project">logicalparadox/electron</div></a>
+        <nav>
+          <div id="installation" class="head"> <a href="#header-installation" class="scroll">Quick Start</a></div>
+          <div id="drip_api" class="head"><a href="#header-drip_api" class="scroll">Drip API</a></div>
+          <div id="on" class="section drip_api"><a href="#drip_api-on" class="scroll">on</a></div>
+          <div id="many" class="section drip_api"><a href="#drip_api-many" class="scroll">many</a></div>
+          <div id="once" class="section drip_api"><a href="#drip_api-once" class="scroll">once</a></div>
+          <div id="off" class="section drip_api"><a href="#drip_api-off" class="scroll">off</a></div>
+          <div id="emit" class="section drip_api"><a href="#drip_api-emit" class="scroll">emit</a></div>
+          <div id="hasListeners" class="section drip_api"><a href="#drip_api-hasListeners" class="scroll">hasListeners</a></div>
+          <div id="bindEvent" class="section drip_api"><a href="#drip_api-bindEvent" class="scroll">bindEvent</a></div>
+          <div id="unbindEvent" class="section drip_api"><a href="#drip_api-unbindEvent" class="scroll">unbindEvent</a></div>
+          <div id="proxyEvent" class="section drip_api"><a href="#drip_api-proxyEvent" class="scroll">proxyEvent</a></div>
+          <div id="unproxyEvent" class="section drip_api"><a href="#drip_api-unproxyEvent" class="scroll">unproxyEvent</a></div>
+        </nav>
+      </header>
+      <section id="content">
+        <div id="header-installation" class="segment">
+          <div class="para"><a href="#header-installation">&para;</a></div>
+          <div class="description"><h4>Features</h4>
+<ul>
+<li>blazing fast <em>(try the benchmarks)</em></li>
+<li>delimeted/namespaced events &amp; wildcards</li>
+<li>support for <a href="http://nodejs.org">node.js</a> and the browser</li>
+<li>extensively used/tested in <a href="http://qualiancy.com">qualiancy&#39;s</a> production environment</li>
+</ul>
+<h4>Installation</h4>
+<p>The <code>drip</code> package is available through <a href="http://npmjs.org">npm</a>. It is recommended
+that you add it to your project&#39;s <code>package.json</code>.
+
+</p>
+<pre><code class="lang-bash">npm install drip</code></pre>
+<h4>Projects Using Drip</h4>
+<ul>
+<li><a href="https://github.com/qualiancy/seed">Seed</a> - Storage-agnostic, event emitting 
+datasets. Schemas, models, hashes, and traversable graphs for node.js.</li>
+<li><a href="https://github.com/qualiancy/quantum">Quantum</a> - Transport independant JSON logging for node.js.</li>
+<li><a href="https://github.com/logicalparadox/electron">Electron</a> - A simple command-line interface framework for node.js.</li>
+</ul>
+</div>
         </div>
-        <div id="latestCommitMessage">Loading...
+        <div id="header-drip_api" class="segment">
+          <div class="para"><a href="#header-drip_api">&para;</a></div>
+          <div class="summary"><h2>Drip API</h2>
+</div>
+          <ul class="tags">
+          </ul>
+          <div class="description"><p>Create new instance of drip. Can also be easily
+be used as the basis for other objects.
+
+</p>
+<pre><code><span class="keyword">var</span> drop = <span class="keyword">new</span> Drip();</code></pre>
+<p>Namespacing is off by default. To turn it on, use
+the <code>delimeter</code> option, indicating what delimeter will
+be used if you choose to listen by string. The recommended
+standard is <code>:</code> or <code>::</code>.
+
+</p>
+<pre><code><span class="comment">// for namespaced events</span>
+<span class="keyword">var</span> drop = <span class="keyword">new</span> Drip({ delimeter: <span class="string">':'</span> });</code></pre>
+<p>You can also use drip as the basis for your own objects.
+To do so, simply call the drip function on construction
+inherit it&#39;s methods. This node pattern is the recommended
+method.
+
+</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">MyConstructor</span> <span class="params">()</span> {</span>
+  Drip.call(<span class="keyword">this</span>, { delimeter: <span class="string">'::'</span> });
+  <span class="comment">// etc</span>
+}
+
+util.inherits(MyConstructor, Drip);</code></pre>
+</div>
         </div>
-        <div id="clone"><a href="https://github.com/logicalparadox/drip" class="button fork">Fork me on GitHub</a>
-          <div class="clone">git clone https://github.com/logicalparadox/backbone.iobind.git
-          </div>
+        <div id="drip_api-on" class="segment">
+          <div class="para"><a href="#drip_api-on">&para;</a></div>
+          <div class="summary"><h3>.on (event, callback)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span></li>
+          </ul>
+          <div class="description"><p>Bind a <code>callback</code> function to all emits of <code>event</code>.
+Wildcards <code>*</code>, will be executed for every event at
+that level of heirarchy.
+
+</p>
+<pre><code><span class="comment">// for simple drips</span>
+drop.on(<span class="string">'foo'</span>, callback);
+
+<span class="comment">// for delimeted drips</span>
+drop.on(<span class="string">'foo:bar'</span>, callback);
+drop.on([ <span class="string">'foo'</span>, <span class="string">'bar'</span> ], callback);
+drop.on(<span class="string">'foo:*'</span>, callback);
+drop.on([ <span class="string">'foo'</span>, <span class="string">'*'</span> ], callback);</code></pre>
+<p>An array can be passed for event when a delimeter has been
+defined. Events can also have as many levels as you like.
+</p>
+</div>
         </div>
-        <div id="links"><a id="repoIssues" href="https://github.com/logicalparadox/drip/issues">GitHub Issues</a><a id="repoDownload" href="https://github.com/downloads/logicalparadox/drip/drip-0.2.2.zip">Download v0.2.2
-</a>
+        <div id="drip_api-many" class="segment">
+          <div class="para"><a href="#drip_api-many">&para;</a></div>
+          <div class="summary"><h3>.many (event, ttl, callback)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Integer &#125;</span><span class="name">TTL</span><span class="desc">Times to listen</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span></li>
+          </ul>
+          <div class="description"><p>Bind a <code>callback</code> function to count(<code>ttl</code>) emits of <code>event</code>.
+
+</p>
+<pre><code><span class="comment">// 3 times then auto turn off callback</span>
+drop.many(<span class="string">'event'</span>, <span class="number">3</span>, callback)</code></pre>
+</div>
         </div>
-      </div>
-    </header>
-    <section id="content">
-      <article>
-        <h1 id="installation-section"><a name="installation">Installation</a>
-        </h1>
-        <section><p>Drip is available for both server-side and the browser.</p>
+        <div id="drip_api-once" class="segment">
+          <div class="para"><a href="#drip_api-once">&para;</a></div>
+          <div class="summary"><h3>.once (event, callback)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc"></span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc"></span></li>
+          </ul>
+          <div class="description"><p>Bind a <code>callback</code> function to one emit of <code>event</code>.
 
-<h2>Node.js</h2>
+</p>
+<pre><code> drip.once(<span class="string">'event'</span>, callback)</code></pre>
+</div>
+        </div>
+        <div id="drip_api-off" class="segment">
+          <div class="para"><a href="#drip_api-off">&para;</a></div>
+          <div class="summary"><h3>.off ([event], [callback])</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">optional</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback</span><span class="desc">optional</span></li>
+          </ul>
+          <div class="description"><p>Unbind <code>callback</code> function from <code>event</code>. If no function
+is provided will unbind all callbacks from <code>event</code>. If
+no event is provided, event store will be purged.
 
-<p>Package is available through <a href="http://npmjs.org">npm</a>:</p>
+</p>
+<pre><code>drop.off(<span class="string">'event'</span>, callback);</code></pre>
+</div>
+        </div>
+        <div id="drip_api-emit" class="segment">
+          <div class="para"><a href="#drip_api-emit">&para;</a></div>
+          <div class="summary"><h3>.emit (event[, args], [...])</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">eventname</span><span class="desc"></span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Object &#125;</span><span class="name">arguments</span><span class="desc">multiple parameters to pass to callback functions</span></li>
+          </ul>
+          <div class="description"><p>Trigger <code>event</code>, passing any arguments to callback functions.
 
-<pre><code>npm install drip</code></pre>
+</p>
+<pre><code> <span class="comment">// normal event</span>
+ drop.emit(<span class="string">'event'</span>, arg, ...);
 
-<h2>Browser</h2>
+ <span class="comment">// namespaced as string</span>
+ drop.emit(<span class="string">'foo:bar'</span>, arg, ...)
 
-<p>Download the package above.</p>
+ <span class="comment">// namespaced as array</span>
+ drop.emit([<span class="string">'foo'</span>, <span class="string">'bar'</span>], arg, ...);</code></pre>
+</div>
+        </div>
+        <div id="drip_api-hasListeners" class="segment">
+          <div class="para"><a href="#drip_api-hasListeners">&para;</a></div>
+          <div class="summary"><h3>.hasListener (ev[, function])</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">key to seach for</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">optional</span><span class="desc">function to check</span></li>
+          </ul>
+          <div class="description"><p>Determine if an event has listeners. If a function
+is proved will determine if that function is a
+part of the listeners.
+</p>
+</div>
+        </div>
+        <div id="drip_api-bindEvent" class="segment">
+          <div class="para"><a href="#drip_api-bindEvent">&para;</a></div>
+          <div class="summary"><h3>.bindEvent (event, target)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">key to bind</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">target</span><span class="desc">drip or node compatible event emitter</span></li>
+          </ul>
+          <div class="description"><p>An event proxy will listen for events on the current drip
+instance and emit them on the target when they occur. This
+functionality is compable with node event emitter. Wildcarded
+events on this instance will be emitted using the delimeter
+on the target.
 
-<p>And include either the normal or minimized build in your HTML header.</p>
+</p>
+<p>Note that proxies will also be removed if a generic <code>off</code> call
+is used.
+</p>
+</div>
+        </div>
+        <div id="drip_api-unbindEvent" class="segment">
+          <div class="para"><a href="#drip_api-unbindEvent">&para;</a></div>
+          <div class="summary"><h3>.unbindEvent (event, target)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">key to bind</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">target</span><span class="desc">drip or node compatible event emitter</span></li>
+          </ul>
+          <div class="description"><p>Remove a boudn event listener. Event and target
+must be provied the same as in <code>proxy</code>.
+</p>
+</div>
+        </div>
+        <div id="drip_api-proxyEvent" class="segment">
+          <div class="para"><a href="#drip_api-proxyEvent">&para;</a></div>
+          <div class="summary"><h3>.proxyEvent (event, [namespace], target)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">key to proxy</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">namespace</span><span class="desc">to prepend to this emit</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">target</span><span class="desc">event emitter</span></li>
+          </ul>
+          <div class="description"><p>An event proxy will listen for events on a different
+event emitter and emit them on the current drip instance
+when they occur. An optional namespace will be pre-pended
+to the event when they are emitted on the current drip
+instance.
 
-<pre><code>&lt;script src=&quot;/public/js/drip.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;/public/js/drip.min.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;</code></pre>
-        </section>
-        <h1 id="usage-section"><a name="usage">Usage Scenarios</a>
-        </h1>
-        <section><p>Writing this. Please hold.</p>
-        </section>
-        <h1 id="contributor-section"><a name="contributor">For Contributors</a>
-        </h1>
-        <section><h2>Developing</h2>
+</p>
+<p>For example, the following will demonstrate a
+namspacing pattering for node.
 
-<p>Please avoid making changes to the <code>dist</code> versions of drip if you are developing in the browser. All
-changes to the library are to be made to <code>lib/drip.js</code> and then packaged for the browser using the <code>make</code>
-command.</p>
+</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">ProxyServer</span> <span class="params">(port)</span> {</span>
+  Drip.call(<span class="keyword">this</span>, { delimeter: <span class="string">':'</span> });
+  <span class="keyword">this</span>.server = http.createServer().listen(port);
+  <span class="keyword">this</span>.bindEvent(<span class="string">'request'</span>, <span class="string">'server'</span>, <span class="keyword">this</span>.server);
+}</code></pre>
+<p>Anytime <code>this.server</code> emits a <code>request</code> event, it will be
+emitted on the constructed ProxyServer as <code>server:request</code>.
+All arguments included in the original emit will also be
+available.
 
-<pre><code>  make</code></pre>
+</p>
+<pre><code><span class="keyword">var</span> proxy = <span class="keyword">new</span> ProxyServer(<span class="number">8080</span>);
+proxy.on(<span class="string">'server:request'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> {</span>
+  <span class="comment">// ..</span>
+});</code></pre>
+<p>If you decide to use the namespace option, you can namespace
+as deep as you like using either an array or a string that
+uses your delimeter. The following examples are also valid.
 
-<h2>Testing</h2>
+</p>
+<pre><code>drop.bindEvent(<span class="string">'request'</span>, <span class="string">'proxy:server'</span>, server);
+drop.bindEvent(<span class="string">'request'</span>, [ <span class="string">'proxy'</span>, <span class="string">'server'</span> ], server);
 
-<p>Tests are written in BDD style on <a href="http://visionmedia.github.com/mocha/">mocha test framework</a> using
-the <a href="https://github.com/logicalparadox/chai">chai assert library</a>. Tests are written to pass in both
-a node.js environment and in the browser.</p>
+drop.on(<span class="string">'proxy:server:request'</span>, cb);</code></pre>
+<p>And so forth...
+</p>
+</div>
+        </div>
+        <div id="drip_api-unproxyEvent" class="segment">
+          <div class="para"><a href="#drip_api-unproxyEvent">&para;</a></div>
+          <div class="summary"><h3>.unproxyEvent (event, [namespace], target)</h3>
+</div>
+          <ul class="tags">
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">event</span><span class="desc">key to proxy</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">namespace</span><span class="desc">to prepend to this emit</span></li>
+            <li class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">target</span><span class="desc">event emitter</span></li>
+          </ul>
+          <div class="description"><p>Remove an event proxy by removing the listening event
+from the target. Don&#39;t forget to include a namespace
+if it was used during <code>bindEvent</code>.
 
-<p>Browsers tests are currently known to pass in Chrome 16 and Firefox 8. Please let me know if you can test
-in other browsers or other version.</p>
-
-<h3>Server Side Testing</h3>
-
-<p>It&#39;s quite simple...</p>
-
-<pre><code>  make test</code></pre>
-
-<h3>Browser Side Testing</h3>
-
-<p>It&#39;s also quite simple. Open up <code>test/browser/index.html</code> in your nearest browser.</p>
-
-<h2>Benchmarking</h2>
-
-<p>A benchmarking suite is available but is a work in progress. To run it...</p>
-
-<pre><code>  make benchmark</code></pre>
-        </section>
-      </article>
-    </section>
-    <footer>
-      <div class="branding">Drip is&nbsp;<a href="http://alogicalparadox.com">a logical paradox</a>. site generated by
-<a href="http://codexjs.com">codex.</a>
-      </div>
-    </footer>
+</p>
+<pre><code>proxy.unbindEvent(<span class="string">'request'</span>, <span class="string">'request'</span>, proxy.server);</code></pre>
+</div>
+        </div>
+      </section>
+      <footer>
+      </footer>
+    </div>
   </body>
 </html>
