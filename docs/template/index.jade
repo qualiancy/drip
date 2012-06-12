@@ -1,31 +1,58 @@
 extends layout
 
+block header
+  h1: a.scroll(href='#top')= file.title
+  .tagline!= site.description 
+  a.fork(href='https://github.com/logicalparadox/electron')
+    h2 View the Project on GitHub
+    .project logicalparadox/electron
+
+
 block nav
-  - if (files.home)
-    ul.sections
-      for page in files.home
-        - var href = page.href.split('/')
-        - href = href[href.length - 2]
-        li: a.scroll(href='#' + href)= (page.menu || page.title)
-  - if (files.page)
-    ul.pages
-      for page in files.page
-        - if (page.template == 'code')
-          li: a(href=site.ghbaseurl + page.href)= page.title
-  - if (files.code)
-    ul.code
-      for page in files.code
-        - if (page.template == 'code-index')
-          li.header: a(href=site.ghbaseurl + page.href)= page.title
-      for page in files.code
-        - if (page.template == 'code')
-          li: a(href=site.ghbaseurl + page.href)= page.title
+  div(id='installation', class='head') 
+    a.scroll(href='#header-installation') Quick Start
+  for codeFile in files.code
+    - var lastHeader = ''
+    for comment in codeFile.prepared
+      for tag in comment.tags
+        - if (tag.type === 'header')
+          - lastHeader = tag.string.toLowerCase().replace(/\s/g, '_')
+          div(id=lastHeader, class='head'): a.scroll(href='#header-' + lastHeader)= tag.string
+        - else if (tag.type === 'name')
+          div(id=tag.string, class='section ' + lastHeader): a.scroll(href='#' + lastHeader + '-' + tag.string)= tag.string
 
 block content
-  article!= file.prepared
-    if (files.home)
-      for section in files.home
-        - var href = section.href.split('/')
-        - href = href[href.length - 2]
-        h1(id=href + '-section'): a(name=href)= section.title
-        section!= section.prepared
+  #header-installation.segment
+    .para: a(href='#header-installation') &para;
+    .description!= file.prepared
+  for codeFile in files.code
+    - var lastPrimary = ''
+    for comment in codeFile.prepared
+      - if (!comment.ignore)
+        - var id = 'default'
+        for tag in comment.tags
+          - if (tag.type === 'header')
+            - lastPrimary = tag.string.toLowerCase().replace(/\s/g, '_')
+            - id = 'header-' + lastPrimary
+          - if (tag.type === 'name')
+            - id = lastPrimary + '-' + tag.string
+        .segment(id=id)
+          .para: a(href='#' + id) &para;
+          .summary!= comment.description.summary
+          ul.tags
+            each tag in comment.tags
+              - if (tag.type == 'param')
+                -var types = tag.types.join(' | ')
+                li.tag
+                  span.type &#64;#{tag.type}
+                  span.types &#123; #{types} &#125;
+                  span.name #{tag.name}
+                  span.desc #{tag.description}
+              - else if (tag.type == 'see')
+                li.tag
+                  span.type &#64;#{tag.type}
+                  if tag.url
+                    span.type: a(href=tag.title, target='_blank')= tag.url
+                  else
+                    span.name #{tag.local}
+          .description!= comment.description.body

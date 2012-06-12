@@ -1,157 +1,145 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
+@import url(https://fonts.googleapis.com/css?family=Oxygen);
+
 @import 'nib'
 @import 'fez'
 
 global-reset()
-
 fez-reset()
 
-accent = darken(#fff, 15%)
+colorfg = #8AB3CF
+colorbg = #E4EBF0
+colorhref = #4180AB
 
 body
-  font 13px/1.4 "Helvetica Neue", Helvetica, Arial, sans-serif
+  font 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif
+  font-weight 300
+  padding 50px
+  background-color colorbg
+  color #292929
 
-h1, h2, h3
-  font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
+h1, h2
+  font-family 'Oxygen', sans-serif 
+  color #696866
+  a
+    color #696866
 
-h1, h3
-  color #4183C4
+h2
+  margin-top 30px
+  padding-bottom 10px
+  border-bottom 1px solid #ccc
+
+h3, h4, h5, h6
+  color #696866
+  font-weight bold
 
 a
-  color #cc3300
+  color colorhref
   text-decoration none
+
+a.fork
+  display block
+  background linear-gradient(top ,lighten(colorfg, 10%), colorfg)
+  box-shadow 1px 1px 5px rgba(0,0,0,30%)
+  border 1px solid darken(colorfg, 20%)
+  color #fff
+  margin-top 30px
+  margin-bottom 30px
+  padding 10px
+  border-radius 5px
+  text-shadow 1px 1px 0px darken(colorfg, 30%)
+
+  &:hover
+    background linear-gradient(top ,lighten(colorfg, 20%), lighten(colorfg, 10%))
+
+  h2
+    border-bottom 0px
+    margin 0px
+    color #fff
+    padding 0px
+  .project
+    font-size 16px
 
 em
   font-style italic
-  font-weight bold
 
-header, section#content, footer
-  width 740px
-  margin-left 220px
+strong
+  font-weight bold
+  
+code, pre
+  font-family Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal;
+  color #333;
+  font-size 12px
+
+ul
+  margin-bottom 1.5em
+  list-style disc
+  padding-left 40px
+
+pre
+  padding 8px 15px
+  border-radius 5px
+  overflow-x auto
+  background #F8F8F8
+  border 1px solid #E5E5E5
+  margin-bottom 1.5em
+
+.segment
+  margin-bottom 60px 
+  position relative
+
+  .para
+    position absolute
+    left -20px
+    font-size 14px
+    width 20px
+    display none
+    opacity 0
+    a
+      color #292929
+
+ul.tags
+  font-size 12px
+  li.tag
+    span
+      margin-right 5px
+    span.type
+      font-weight bold
+    span.types
+      font-style italic
+
+.wrapper
+  width 860px
+  margin 0px auto
 
 header
-  clearfix()
-  margin-top 50px
-  h1
-    font-size 45px
-    a
-      color #4183C4
-  p
-    color lighten(#000, 40%)
-    font-size 22px
-    font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
-  .gh
-    clearfix()
-    background darken(#fff, 3%)
-    box-shadow 2px 2px 3px darken(#fff, 7%), inset 1px 1px 2px #fff
-    border 1px solid accent
-    padding 10px
-    position relative
-    min-height 100px
-    h4
-      text-shadow 1px 1px 0px #fff
-      margin-bottom 10px
-      color lighten(#000, 40%)
-      #latestCommitURL
-        font-size 11px
-        margin-left 10px
-    #commit
-      font-size 10px
-      margin-right 10px
-      line-height 18px
-      padding 0px 5px
-      background lighten(#000, 70%)
-      box-shadow inset 1px 1px 1px lighten(#000, 60%), 1px 1px 0px #fff
-      border-radius 3px
-      float left
-      color #fff
-      a
-        color #fff
-        font-style italic
-    #latestCommitMessage
-      line-height 20px
-      text-shadow 1px 1px 0px #fff
-    #clone
-      position absolute
-      bottom 10px
-      right 10px
-      left 10px
-      .fork
-        button-shiny(#4183C4, #fff, #cc3300)
-        cursor pointer
-        float left
-        display inline-block
-      .clone
-        color lighten(#000, 40%)
-        float left
-        display inline-block
-        margin-left 15px
-        background #fff
-        border-radius 5px
-        border 1px solid accent
-        padding 0px 15px
-        box-shadow inset 1px 1px 2px darken(#fff, 7%), 1px 1px 0px #fff
-        font 11px "Bitstream Vera Sans Mono", "Courier", monospace
-        line-height 23px
-        max-width 545px
-        overflow hidden
-    #links
-      position absolute
-      top 10px
-      right 10px
-      font-size 11px
-      line-height 18px
-      a
-        color #4183C4
-        padding 0px 10px
-        &:hover
-          text-decoration underline
+  width 270px
+  float left
+  position fixed
+  text-align right
 
 section#content
-  margin-top 50px
-  margin-bottom 50px
-  min-height 350px
-
-  h1
-    border-top 1px solid accent
-    padding-top 10px
-    margin-top 85px
-  p
-    code
-      padding 3px 5px
-      background darken(#fff, 10%)
+  width 500px
+  padding-top 65px
+  float right
 
 nav
-  position fixed
-  top 65px
-  left 30px
-  width 140px
+  text-align right
 
-  ul
-    list-style none
-    margin-bottom 50px
-    li
-      margin-left 0px
-      text-align right
-      &.keepcase
-        a
-          text-transform none !important
-      &.header
-        font-weight bold
-      a
-        color lighten(#000, 40%)
-        font-family "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif
-        font-size 14px
-        text-transform lowercase
-        &:hover
-          text-decoration underline
+  .active
+    font-weight bold
+
+  .section
+    display none
+
+  .head > a
+    color #222
+  .section > a
+    color darken(colorfg, 30%)
 
 footer
-  margin-top 100px
-  padding-top 25px
-  margin-bottom 50px
-  border-top 1px solid accent
-  color lighten(#000, 50%)
-  text-transform lowercase
+  width 270px
+  position fixed
+  bottom 50px
 
-@import 'scrollbar'
 @import 'code'
