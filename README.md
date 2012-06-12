@@ -6,10 +6,36 @@ An EventEmitter alternative for nodejs and the browser that supports namespaces 
 
 * See the [documentation](http://logicalparadox.github.com/drip).
 
-## Browser Usage
+#### Features
 
-The browser builds are in the `dist` folder. If you are working on changes in a fork,
-please make your changes to `lib/drip.js` and the run `make` to build a browser version.
+- blazing fast _(try the benchmarks)_
+- delimeted/namespaced events &amp; wildcards
+- support for [node.js](http://nodejs.org) and the browser
+- extensively used in [qualiancy's](http://qualiancy.com) production environment
+
+#### Installation
+
+The `drip` package is available through [npm](http://npmjs.org). It is recommended
+that you add it to your project's `package.json`.
+
+```bash
+npm install drip
+```
+
+## Tests
+
+Tests are writting in [Mocha](http://github.com/visionmedia/mocha) using 
+the [Chai](http://chaijs.com) `expect` BDD assertion library. To make sure you 
+have that installed, clone this repo, install dependacies using `npm install`.
+
+    $ npm test
+
+## Contributors
+
+Interested in contributing? Fork to get started. Contact [@logicalparadox](http://github.com/logicalparadox) 
+if you are interested in being regular contributor.
+
+* Jake Luer ([@logicalparadox](http://github.com/logicalparadox))
 
 ## License
 

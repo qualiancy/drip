@@ -1,77 +1,141 @@
-$(function () {
+$(document).ready(function() {
+  // :)
 
-  $.ajax({
-    url: "http://github.com/api/v2/json/commits/list/" + ghuser + "/" + ghproject + "/master",
-    dataType: 'jsonp',
-    success: function(json) {
-      var latest = json.commits[0],
-          stamp = new Date(latest.committed_date),
-          stampString = month[stamp.getMonth()] + ' ' + stamp.getDate() + ', ' + stamp.getFullYear();
+  $('.segment').mouseenter(function (e) {
+    var $para = $(this).find('.para');
+    $para.css({
+      display: 'block'
+    });
 
-      $('#latestCommitMessage').text(latest.message);
-      $('#latestCommitTime').text(stampString);
-      $('#latestCommitURL').html(' - commit ' + latest.id.substring(0, 6));
-      $('#latestCommitURL').attr('href', "https://github.com" + latest.url);
-    }
+    $para
+      .stop()
+      .animate({ 'opacity': 1 }, 300);
   });
 
-  var month = new Array(12);
-      month[0] = "Jan";
-      month[1] = "Feb";
-      month[2] = "Mar";
-      month[3] = "Apr";
-      month[4] = "May";
-      month[5] = "Jun";
-      month[6] = "Jul";
-      month[7] = "Aug";
-      month[8] = "Sep";
-      month[9] = "Oct";
-      month[10] = "Nov";
-      month[11] = "Dec";
+  $('.segment').mouseleave(function (e) {
+    var $para = $(this).find('.para');
+    $para
+      .stop()
+      .animate({ 'opacity': 0 }, 300);
+  });
 
-
-  $('pre code').addClass('prettyprint');
-  prettyPrint();
+  var scrolling = false
+    , lastSection = 'installation';
 
   $('a.scroll').click(function (e) {
     e.preventDefault();
 
-    var section = $(this).attr('href')
-      , $scrollto = $(section + '-section');
-
-    $('html,body').animate({
-      scrollTop: $scrollto.offset().top
-    });
-  });
-
-  $('.view-source').click(function(){
-    var $obj = $(this).next('.code-wrap')
-      , will = ($obj.css('display') == 'none') ? true : false;
-
-    $obj.toggle(200);
-
-    if (will) {
+    var section = $(this).attr('href');
+    scrolling = true;
+    if (section == '#top') {
       $('html,body').animate({
-        scrollTop: $obj.offset().top
+        scrollTop: 0
+      }, function () {
+        setTimeout(function () {
+          lastSection = 'header-installation';
+          setActiveMenu();
+          scrolling = false;
+        }, 300);
+      });
+    } else {
+      var $scrollto = $(section);
+      $('html,body').animate({
+        scrollTop: $scrollto.offset().top - 15
+      }, function () {
+        setTimeout(function () {
+          lastSection = section.substr(1);
+          setActiveMenu();
+          scrolling = false;
+        }, 300);
       });
     }
+  });
 
-    var tag = $(this).siblings('.header').find('h1').text()
-      , action = (will) ? 'opened' : 'closed'
-      , note = 'User ' + action + ' ' + tag + '.';
+  var panelTops = {}
+    , theTimer;
 
-    mpq.track('View Source clicked', {
-      'tag': tag,
-      'action': action,
-      'mp_note': note
+
+  function detectActiveMenu() {
+    if (scrolling) return;
+    var pos = $(document).scrollTop()
+      , which = lastSection;
+
+    for (key in panelTops) {
+      if ((pos + 250) >= panelTops[key]) {
+        which = key;
+      }
+    }
+
+    if (!scrolling && which !== lastSection) {
+      lastSection = which;
+      setActiveMenu();
+    }
+  }
+
+  var lastMenu;
+  function setActiveMenu() {
+    var info = lastSection.split('-')
+      , isHeader = (info[0] == 'header') ? true : false
+      , primary = (isHeader) ? info[1] : info[0];
+
+    $('nav > div').removeClass('active');
+    if (isHeader) {
+      $('nav > #' + primary + '.head')
+        .addClass('active');
+    } else {
+      $('nav > #' + info[1] + '.' + info[0] + '.section')
+        .addClass('active');
+    }
+
+    if (primary !== lastMenu) {
+      if (lastMenu) {
+        $('nav > .' + lastMenu)
+          .stop()
+          .animate({
+              height: 0
+            , opacity: 0
+          }, 300, function () {
+            $(this).hide();
+          });
+      }
+
+      $('nav > .' + primary)
+        .css({
+            display: 'block'
+          , opacity: 0
+          , height: 0
+        });
+
+      $('nav > .' + primary)
+        .stop()
+        .animate({
+            height: 21
+          , opacity: 1
+        }, 300);
+
+      lastMenu = primary;
+    }
+  }
+
+  setTimeout(function () {
+
+    $('.segment').each(function(index) {
+      var id = $(this).attr('id');
+      panelTops[id] = $(this).offset().top;
     });
 
-    return false;
-  });
+    detectActiveMenu();
 
-  $('a.button.github').click(function () {
-    mpq.track('Github Fork clicked');
-  });
+    // this handles the document scroll event
+    $(document).scroll(function(e) {
+      if (!scrolling) detectActiveMenu();
+      if (!theTimer) {
+        theTimer = setTimeout(function () {
+          detectActiveMenu();
+          theTimer = null;
+        }, 1000);
+      }
+    });
+  }, 2000);
 
-  $('.code-wrap').hide();
 });
