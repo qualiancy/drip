@@ -2,13 +2,15 @@
   "author": "Jake Luer <jake@alogicalparadox.com>",
   "name": "drip",
   "description": "An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.",
-  "keyword": [ "event", "events", "eventemitter", "emitter" ],
-  "version": "0.3.0",
-  "homepage": "http://logicalparadox.github.com/drip",
+  "keywords": [ "event", "events", "eventemitter", "emitter" ],
+  "version": "0.3.1",
+  "license": "MIT",
+  "homepage": "http://alogicalparadox.com/drip",
   "repository": {
     "type": "git",
     "url": "git://github.com/logicalparadox/drip.git"
   },
+  "bugs": "https://github.com/logicalparadox/drip/issues",
   "main": "index",
   "scripts": {
     "bench": "make bench",
@@ -16,6 +18,10 @@
   },
   "engines": {
     "node": ">= 0.4.8"
+  },
+  "browser": {
+    "main": "./drip.js",
+    "min": "./drip.min.js"
   },
   "dependencies": {},
   "devDependencies": {

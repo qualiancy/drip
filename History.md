@@ -1,4 +1,12 @@
 
+0.3.1 / 2012-06-12 
+==================
+
+  * browser build
+  * docs tweaks
+  * Merge branch 'feature/docs'
+  * docs get a new coat of paint
+
 0.3.0 / 2012-06-10 
 ==================
 
