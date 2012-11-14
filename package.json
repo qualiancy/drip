@@ -1,29 +1,33 @@
 {
-  "author": "Jake Luer <jake@alogicalparadox.com>",
-  "name": "drip",
-  "description": "An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.",
-  "keywords": [ "event", "events", "eventemitter", "emitter" ],
-  "version": "0.3.1",
-  "license": "MIT",
-  "homepage": "http://alogicalparadox.com/drip",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/logicalparadox/drip.git"
-  },
-  "bugs": "https://github.com/logicalparadox/drip/issues",
-  "main": "index",
-  "scripts": {
-    "bench": "make bench",
-    "test": "make test"
-  },
-  "engines": {
-    "node": ">= 0.6.0"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "mocha": "*",
-    "chai": "*",
-    "chai-spies": "*",
-    "matcha": "0.2.x",
-  }
+    "name": "drip"
+  , "version": "0.3.1"
+  , "description": "An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards."
+  , "author": "Jake Luer <jake@qualiancy.com> (http://qualiancy.com)"
+  , "license": "MIT"
+  , "keywords": [
+        "event"
+      , "events"
+      , "eventemitter"
+      , "emitter"
+    ]
+  , "repository": {
+        "type": "git"
+      , "url": "git@github.com:qualiancy/drip.git"
+    }
+  , "engines": {
+      "node": "*"
+    }
+  , "main": "./index"
+  , "scripts": {
+      "test": "make test"
+    }
+  , "dependencies": {
+    }
+  , "devDependencies": {
+        "chai": "*"
+      , "chai-spies": "*"
+      , "component": "*"
+      , "mocha": "*"
+      , "mocha-phantomjs": "*"
+    }
 }

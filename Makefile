@@ -29,6 +29,6 @@ lib-cov:
 	@jscoverage lib lib-cov
 
 bench:
-	@./node_modules/.bin/matcha $(BENCHMARKS)
+	@matcha $(BENCHMARKS)
 
 .PHONY: clean-docs docs clean test test-cov lib-cov bench
