@@ -1,13 +1,13 @@
 
 TESTS = test/*.js
-REPORTER = dot
+REPORTER = spec
 BENCHMARKS = benchmark/*.js
 
 #
 # Tests
 # 
 
-test: test-node test-browser test-cov
+test: test-node test-browser 
 
 test-node: 
 	@printf "\n  ==> [Node.js]"
