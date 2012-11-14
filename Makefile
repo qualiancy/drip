@@ -1,19 +1,17 @@
 
 TESTS = test/*.js
 REPORTER = dot
-BENCHMARKS = benchmarks/*.js
-
-all:
-	@node support/compile
+BENCHMARKS = benchmark/*.js
 
 clean:
-	@rm -f drip.js drip.min.js
+	@rm -rf lib-cov
+	@rm -f coverage.html
+	@rm -rf build
+	@rm -rf components
 
 docs: clean-docs
-	@./node_modules/.bin/codex build \
-		--in docs
-	@./node_modules/.bin/codex serve \
-		--dir docs/out --mount /drip
+	@codex build --in docs
+	@codex serve --dir docs/out --mount /drip
 
 clean-docs:
 	@rm -rf docs/out
@@ -33,4 +31,4 @@ lib-cov:
 bench:
 	@./node_modules/.bin/matcha $(BENCHMARKS)
 
-.PHONY: all clean-docs docs clean test test-cov lib-cov bench
+.PHONY: clean-docs docs clean test test-cov lib-cov bench

@@ -19,17 +19,11 @@
   "engines": {
     "node": ">= 0.6.0"
   },
-  "browser": {
-    "main": "./drip.js",
-    "min": "./drip.min.js"
-  },
   "dependencies": {},
   "devDependencies": {
     "mocha": "*",
     "chai": "*",
     "chai-spies": "*",
-    "matcha": "0.1.x",
-    "codex": "0.2.x",
-    "folio": "0.2.x"
+    "matcha": "0.2.x",
   }
 }
