@@ -1,4 +1,34 @@
 
+1.0.0 / 2012-11-15 
+==================
+
+  * readme
+  * add new benchmarks
+  * remove old benchmakrs
+  * remove codex docs
+  * Merge branch 'refactor/1xx'
+  * enhanced: tests for (un)bind/(un)proxy
+  * improve argument parsing or (un)proxyEvent when used with enhanced
+  * emitter: tests for (un)bind/(un)proxy
+  * common: (un)proxyEvent doesn't error if no drip settings storage
+  * tests: enhanced emit
+  * travis node 0.8
+  * refactor most of the tests
+  * typos in the lib
+  * remove old tests
+  * refactor lib to be seperate constructors
+  * refactor makefile
+  * refactor makefile
+  * update ignore files
+  * component: json not js
+  * add component.json
+  * refactor package.json and move matcha to global install
+  * change docs generation behavion
+  * remove browser build tools
+  * rename benchmark folder
+  * using chai-spies
+  * broken travis
+
 0.3.1 / 2012-06-12 
 ==================
 
