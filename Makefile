@@ -56,18 +56,10 @@ bench:
 	@matcha $(BENCHMARKS)
 
 #
-# Documentation
-# 
-
-docs: clean-docs
-	@codex build --in docs
-	@codex serve --dir docs/out --mount /drip
-
-#
 # Clean up
 # 
 
-clean: clean-components clean-cov clean-docs 
+clean: clean-components clean-cov
 
 clean-components:
 	@rm -rf build
@@ -77,7 +69,5 @@ clean-cov:
 	@rm -rf lib-cov
 	@rm -f coverage.html
 
-clean-docs:
-	@rm -rf docs/out
 
-.PHONY: clean-docs docs clean test test-cov lib-cov bench
+.PHONY: clean clean-components clean-cov test test-cov test-node test-browser lib-cov bench
