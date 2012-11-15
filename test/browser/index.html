@@ -1,17 +1,31 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Drip Browser Tests</title>
+    <title>Browser Tests (drip)</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="../../node_modules/mocha/mocha.css" />
-    <script src="../../drip.js"></script>
     <script src="../../node_modules/mocha/mocha.js"></script>
     <script src="../../node_modules/chai/chai.js"></script>
     <script src="../../node_modules/chai-spies/chai-spies.js"></script>
-    <script>mocha.setup('bdd')</script>
-    <script src="../drip.simple.js"></script>
-    <script src="../drip.wildcard.js"></script>
+    <script>
+      mocha.setup('bdd')
+      var should = chai.should();
+    </script>
+    <script src="../../build/build.js"></script>
+    <script>
+      drip = require('drip');
+    </script>
+    <script src="../emitter.emit.js"></script>
+    <script src="../emitter.hasListener.js"></script>
+    <script src="../emitter.off.js"></script>
+    <script src="../emitter.on.js"></script>
+    <script src="../enhanced.emit.js"></script>
+    <script src="../enhanced.hasListener.js"></script>
+    <script src="../enhanced.off.js"></script>
+    <script src="../enhanced.on.js"></script>
     <script>onload = function () {
-      mocha.run();
+      if (window.mochaPhantomJS) mochaPhantomJS.run()
+      else mocha.run();
     }
     </script>
   </head>

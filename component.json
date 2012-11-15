@@ -13,6 +13,9 @@
   , "main": "lib/drip.js"
   , "scripts": [
         "lib/drip.js"
+      , "lib/drip/common.js"
+      , "lib/drip/emitter.js"
+      , "lib/drip/enhanced.js"
     ]
   , "dependencies": {
         "qualiancy/tea-concat": "0.1.0"
