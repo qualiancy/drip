@@ -1,10 +1,6 @@
-[![Build Status](https://secure.travis-ci.org/logicalparadox/drip.png)](http://travis-ci.org/logicalparadox/drip)
-
-# Drip
+# Drip [![Build Status](https://secure.travis-ci.org/qualiancy/drip.png?branch=master)](https://travis-ci.org/qualiancy/drip)
 
 An EventEmitter alternative for nodejs and the browser that supports namespaces and wildcards.
-
-* See the [documentation](http://logicalparadox.github.com/drip).
 
 #### Features
 
@@ -13,29 +9,19 @@ An EventEmitter alternative for nodejs and the browser that supports namespaces 
 - support for [node.js](http://nodejs.org) and the browser
 - extensively used in [qualiancy's](http://qualiancy.com) production environment
 
-#### Installation
+## Installation
 
-The `drip` package is available through [npm](http://npmjs.org). It is recommended
-that you add it to your project's `package.json`.
+### Node.js
 
-```bash
-npm install drip
-```
+`drip` is available on [npm](http://npmjs.org).
 
-## Tests
+    $ npm install drip
 
-Tests are writting in [Mocha](http://github.com/visionmedia/mocha) using 
-the [Chai](http://chaijs.com) `expect` BDD assertion library. To make sure you 
-have that installed, clone this repo, install dependacies using `npm install`.
+### Component
 
-    $ npm test
+`drip` is available as a [component](https://github.com/component/component).
 
-## Contributors
-
-Interested in contributing? Fork to get started. Contact [@logicalparadox](http://github.com/logicalparadox) 
-if you are interested in being regular contributor.
-
-* Jake Luer ([@logicalparadox](http://github.com/logicalparadox))
+    $ component install qualiancy/drip
 
 ## License
 
