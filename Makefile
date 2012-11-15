@@ -1,36 +1,83 @@
 
 TESTS = test/*.js
-REPORTER = dot
-BENCHMARKS = benchmarks/*.js
+REPORTER = spec
+BENCHMARKS = benchmark/*.js
 
-all:
-	@node support/compile
+#
+# Tests
+# 
 
-clean:
-	@rm -f drip.js drip.min.js
+test: test-node test-browser 
 
-docs: clean-docs
-	@./node_modules/.bin/codex build \
-		--in docs
-	@./node_modules/.bin/codex serve \
-		--dir docs/out --mount /drip
-
-clean-docs:
-	@rm -rf docs/out
-
-test:
+test-node: 
+	@printf "\n  ==> [Node.js]"
 	@NODE_ENV=test ./node_modules/.bin/mocha \
+		--require ./test/bootstrap \
 		--reporter $(REPORTER) \
 		$(TESTS)
 
+test-browser: build
+	@printf "\n  ==> [Phantom.Js]"
+	@./node_modules/.bin/mocha-phantomjs \
+		--R ${REPORTER} \
+		./test/browser/index.html
+
 test-cov: lib-cov
-	@DRIP_COV=1 $(MAKE) test REPORTER=html-cov > coverage.html
+	@DRIP_COV=1 NODE_ENV=test ./node_modules/.bin/mocha \
+		--require ./test/bootstrap \
+		--reporter html-cov \
+		$(TESTS) \
+		> coverage.html
+	$(MAKE) clean-cov
+
+#
+# Components
+# 
+
+build: components lib/*
+	@./node_modules/.bin/component-build --dev
+
+components: component.json
+	@./node_modules/.bin/component-install --dev
+
+#
+# Coverage
+# 
 
 lib-cov:
 	@rm -rf lib-cov
 	@jscoverage lib lib-cov
 
-bench:
-	@./node_modules/.bin/matcha $(BENCHMARKS)
+#
+# Benchmarks
+# 
 
-.PHONY: all clean-docs docs clean test test-cov lib-cov bench
+bench:
+	@matcha $(BENCHMARKS)
+
+#
+# Documentation
+# 
+
+docs: clean-docs
+	@codex build --in docs
+	@codex serve --dir docs/out --mount /drip
+
+#
+# Clean up
+# 
+
+clean: clean-components clean-cov clean-docs 
+
+clean-components:
+	@rm -rf build
+	@rm -rf components
+
+clean-cov:
+	@rm -rf lib-cov
+	@rm -f coverage.html
+
+clean-docs:
+	@rm -rf docs/out
+
+.PHONY: clean-docs docs clean test test-cov lib-cov bench
