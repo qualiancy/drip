@@ -1,4 +1,10 @@
 
+1.1.0 / 2012-12-22 
+==================
+
+  * listeners: [tests] add tests for #listeners
+  * listeners: [enhanced/emitter] add feature, return array of listeners for event
+
 1.0.0 / 2012-11-15 
 ==================
 
