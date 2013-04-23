@@ -1,4 +1,13 @@
 
+1.2.0 / 2013-04-23 
+==================
+
+  * emitter: [construction] if passed an object, mixin ee methods on object
+  * emitter: [emit] if error event, throw if no listeners
+  * benchmark: add warm up cycle
+  * emitter: [mixin] add mixin method for inherits-free emitters
+  * test: remove extraneous console.log
+
 1.1.0 / 2012-12-22 
 ==================
 
