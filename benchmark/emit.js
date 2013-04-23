@@ -11,6 +11,10 @@ function eventBench (Emitter) {
     var ee = new Emitter();
     ee.on('event', function () {});
 
+    bench('(warm up)', function () {
+      ee.emit('event', 1, 2, 3, 4, 5);
+    });
+
     bench('.emit(\'event\')', function () {
       ee.emit('event');
     });
