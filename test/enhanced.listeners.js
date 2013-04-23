@@ -7,7 +7,6 @@ describe('enhanced', function () {
       var emitter = new drip.EnhancedEmitter();
       emitter.on('event:nested', noop);
       var listeners = emitter.listeners('event:nested');
-      console.log(listeners);
       listeners.should.be.an('array');
       listeners.should.have.length(1);
     });
