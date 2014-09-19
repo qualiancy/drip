@@ -94,6 +94,17 @@ describe('enhanced', function () {
       listener.should.have.always.been.called.with.exactly({ hello: 'universe' });
       noop.should.not.have.been.called();
     });
+
+    it('should throw if event === "error" and no listeners', function() {
+      var emitter = new drip.EnhancedEmitter();
+      console.log('here');
+      (function() {
+        emitter.emit('error', new Error('emitter test'));
+      }).should.throw(Error, /emitter test/);
+      (function() {
+        emitter.emit('error');
+      }).should.throw(Error, /EnhancedEmitter \"error\" event without argument./);
+    });
   });
 
   describe('.emit(\'event\', arg, arg)', function () {
